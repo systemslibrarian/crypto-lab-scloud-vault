@@ -20,14 +20,15 @@
 </head>
 
 <body>
-  <header class="site-header">
-    <h1><span class="logo">🔐</span> S-Cloud+ Vault</h1>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <header class="site-header" role="banner">
+    <h1><span class="logo" aria-hidden="true">🔐</span> S-Cloud+ Vault</h1>
     <div class="header-right">
       <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container" id="main-content">
     <div class="intro">
       <h2>S-Cloud+ KEM Explorer</h2>
       <p>Interactive demonstration of the S-Cloud+ lattice-based Key Encapsulation Mechanism
@@ -39,9 +40,9 @@
     <div id="exhibits"></div>
   </main>
 
-  <footer class="site-footer">
-    Whether you eat or drink or whatever you do, do it all for the glory of God.
-    — 1 Corinthians 10:31
+  <footer class="site-footer" role="contentinfo">
+    <p>Whether you eat or drink or whatever you do, do it all for the glory of God.
+    — 1 Corinthians 10:31</p>
   </footer>
 
   <script type="module" src="/src/main.ts"></script>

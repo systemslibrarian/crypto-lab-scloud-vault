@@ -10,7 +10,9 @@ export function renderExhibit6(container: HTMLElement): void {
        Each makes different design trade-offs in structure, secret distribution,
        and error correction.</p>
 
+    <div class="table-scroll" role="region" aria-label="KEM comparison table" tabindex="0">
     <table class="comparison-table">
+      <caption class="sr-only">Comparison of S-Cloud+, FrodoKEM, and ML-KEM</caption>
       <thead>
         <tr>
           <th>Property</th>
@@ -136,8 +138,9 @@ export function renderExhibit6(container: HTMLElement): void {
         </tr>
       </tbody>
     </table>
+    </div>
 
-    <div class="decision-tree">
+    <div class="decision-tree" role="region" aria-label="Decision tree for choosing a KEM">
       <div class="question">Which KEM should I use?</div>
       <div class="node">
         <div class="question">Need a NIST standard right now?</div>

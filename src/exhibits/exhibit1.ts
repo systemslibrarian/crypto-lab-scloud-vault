@@ -38,41 +38,43 @@ function buildLWEDisplay(demo: ToyLWEDemo): string {
 
   // Matrix A
   html += `<div style="margin-bottom:1rem">
-    <span class="result-label">Matrix A (${n}×${n}, mod ${q}):</span>
+    <span class="result-label" id="matrix-a-label">Matrix A (${n}×${n}, mod ${q}):</span>
+    <div class="matrix-scroll" role="grid" aria-labelledby="matrix-a-label">
     <div class="matrix-grid" style="grid-template-columns: repeat(${n}, 1fr)">`;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      html += `<div class="matrix-cell">${A[i][j]}</div>`;
+      html += `<div class="matrix-cell" role="gridcell" aria-label="A[${i}][${j}]=${A[i][j]}">${A[i][j]}</div>`;
     }
   }
-  html += `</div></div>`;
+  html += `</div></div></div>`;
 
   // Secret s (ternary)
   html += `<div style="margin-bottom:1rem">
     <span class="result-label">Secret s (ternary, weight ${n >> 1}):</span>
-    <div class="vector-display">`;
+    <div class="vector-display" role="list" aria-label="Secret vector s">`;
   for (let i = 0; i < n; i++) {
     const cls = s[i] > 0 ? 'pos' : s[i] < 0 ? 'neg' : 'zero';
-    html += `<div class="vec-entry ${cls}">${s[i] > 0 ? '+1' : s[i] < 0 ? '-1' : '0'}</div>`;
+    const label = s[i] > 0 ? '+1' : s[i] < 0 ? '-1' : '0';
+    html += `<div class="vec-entry ${cls}" role="listitem" aria-label="s[${i}]=${label}">${label}</div>`;
   }
   html += `</div></div>`;
 
   // Error e
   html += `<div style="margin-bottom:1rem">
     <span class="result-label">Error e (Gaussian, small):</span>
-    <div class="vector-display">`;
+    <div class="vector-display" role="list" aria-label="Error vector e">`;
   for (let i = 0; i < n; i++) {
     const cls = e[i] > 0 ? 'pos' : e[i] < 0 ? 'neg' : 'zero';
-    html += `<div class="vec-entry ${cls}">${e[i]}</div>`;
+    html += `<div class="vec-entry ${cls}" role="listitem" aria-label="e[${i}]=${e[i]}">${e[i]}</div>`;
   }
   html += `</div></div>`;
 
   // Result b
   html += `<div>
     <span class="result-label">b = A·s + e (mod ${q}):</span>
-    <div class="vector-display">`;
+    <div class="vector-display" role="list" aria-label="Result vector b">`;
   for (let i = 0; i < n; i++) {
-    html += `<div class="vec-entry" style="background:var(--bg-code)">${b[i]}</div>`;
+    html += `<div class="vec-entry" role="listitem" aria-label="b[${i}]=${b[i]}" style="background:var(--bg-code)">${b[i]}</div>`;
   }
   html += `</div></div>`;
 

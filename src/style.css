@@ -59,6 +59,23 @@
   --table-stripe: #f6f8fa;
 }
 
+/* ── Skip Link ──────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  z-index: 200;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
 /* ── Base ───────────────────────────── */
 html {
   scroll-behavior: smooth;
@@ -262,14 +279,18 @@ code, pre {
 }
 
 /* ── Matrix / Grid Display ──────────── */
+.matrix-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
 .matrix-grid {
   display: inline-grid;
   gap: 2px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   margin: 0.5rem 0;
-  overflow-x: auto;
-  max-width: 100%;
 }
 
 .matrix-cell {
@@ -333,11 +354,17 @@ code, pre {
 }
 
 /* ── Comparison Table ───────────────── */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
+
 .comparison-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
-  margin: 1rem 0;
+  min-width: 600px;
 }
 
 .comparison-table th,
@@ -408,6 +435,24 @@ code, pre {
   font-family: var(--font-mono);
 }
 
+/* ── Focus styles ───────────────────── */
+.btn:focus-visible,
+#theme-toggle:focus-visible,
+.param-select:focus-visible,
+.exhibit-header:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
 /* ── Animations ─────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -426,6 +471,19 @@ code, pre {
 .computing {
   animation: pulse 1s ease-in-out infinite;
   color: var(--warning);
+}
+
+/* ── Visually Hidden (SR only) ───────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ── Footer ─────────────────────────── */
@@ -485,6 +543,12 @@ code, pre {
 
   .bw32-grid {
     grid-template-columns: repeat(16, 1fr);
+  }
+
+  .comparison-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

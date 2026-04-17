@@ -4,7 +4,7 @@
  * Shows encoding, decoding with noise, and error correction behavior.
  */
 
-import { bw32Encode, bw32Decode, bw32DemoRoundtrip, BW32Demo } from '../crypto/bw32';
+import { bw32Encode, bw32DemoRoundtrip, BW32Demo } from '../crypto/bw32';
 
 export function renderExhibit3(container: HTMLElement): void {
   const q = 32768; // Use Scloud+-128 modulus for demo
@@ -34,7 +34,7 @@ export function renderExhibit3(container: HTMLElement): void {
       <label class="inline-label">
         Noise σ:
         <input type="range" id="bw32-noise-slider" min="0" max="8000" value="500" step="100"
-               class="noise-slider">
+               class="noise-slider" aria-label="Noise standard deviation">
         <span id="bw32-noise-val">500</span>
       </label>
       <button class="btn" id="bw32-decode-btn">Encode + Add Noise + Decode</button>
@@ -122,12 +122,12 @@ function renderEncoding(msg: number, encoded: Int32Array, q: number): string {
 
   // Visualize the 32-D encoded vector as a color grid
   html += `<div style="margin-top:0.5rem"><span class="result-label">Encoded vector (32 dimensions):</span></div>`;
-  html += `<div class="bw32-grid">`;
+  html += `<div class="bw32-grid" role="img" aria-label="32-dimensional encoded vector visualization">`;
   for (let i = 0; i < 32; i++) {
     const val = encoded[i];
     const isPositive = val === scale;
     const bg = isPositive ? 'var(--positive)' : 'var(--negative)';
-    html += `<div class="bw32-cell" style="background:${bg};color:#fff" title="v[${i}]=${val}">${isPositive ? '+' : '−'}</div>`;
+    html += `<div class="bw32-cell" style="background:${bg};color:#fff" title="v[${i}]=${val}" aria-hidden="true">${isPositive ? '+' : '\u2212'}</div>`;
   }
   html += `</div>`;
 
@@ -160,7 +160,7 @@ function renderDecodeDemo(demo: BW32Demo, q: number): string {
 
 function renderBW32Grid(vec: Int32Array, scale: number, q: number): string {
   const halfQ = Math.floor(q / 2);
-  let html = '<div class="bw32-grid">';
+  let html = '<div class="bw32-grid" role="img" aria-label="Encoded vector heatmap">';
   for (let i = 0; i < 32; i++) {
     let centered = vec[i] % q;
     if (centered > halfQ) centered -= q;
@@ -169,19 +169,19 @@ function renderBW32Grid(vec: Int32Array, scale: number, q: number): string {
     const r = isPos ? 63 : Math.round(248 * ratio + 30 * (1 - ratio));
     const g = isPos ? Math.round(185 * ratio + 30 * (1 - ratio)) : Math.round(81 * ratio + 30 * (1 - ratio));
     const b = isPos ? Math.round(80 * ratio + 30 * (1 - ratio)) : Math.round(73 * ratio + 30 * (1 - ratio));
-    html += `<div class="bw32-cell" style="background:rgb(${r},${g},${b});color:#fff" title="${centered}"></div>`;
+    html += `<div class="bw32-cell" style="background:rgb(${r},${g},${b});color:#fff" title="${centered}" aria-hidden="true"></div>`;
   }
   html += '</div>';
   return html;
 }
 
 function renderNoiseGrid(noise: Int32Array, scale: number): string {
-  let html = '<div class="bw32-grid">';
+  let html = '<div class="bw32-grid" role="img" aria-label="Noise heatmap">';
   const maxNoise = Math.max(1, ...Array.from(noise).map(Math.abs));
   for (let i = 0; i < 32; i++) {
     const ratio = Math.abs(noise[i]) / maxNoise;
     const intensity = Math.round(200 * ratio);
-    html += `<div class="bw32-cell" style="background:rgb(${intensity},${intensity >> 1},0);color:#fff" title="${noise[i]}"></div>`;
+    html += `<div class="bw32-cell" style="background:rgb(${intensity},${intensity >> 1},0);color:#fff" title="${noise[i]}" aria-hidden="true"></div>`;
   }
   html += '</div>';
   return html;

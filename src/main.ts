@@ -29,24 +29,38 @@ for (const [num, title, render] of exhibits) {
 
   const header = document.createElement('div');
   header.className = 'exhibit-header';
+  header.setAttribute('role', 'button');
+  header.setAttribute('tabindex', '0');
+  header.setAttribute('aria-expanded', 'true');
+  header.setAttribute('aria-controls', `exhibit-body-${num}`);
   header.innerHTML = `
-    <h3><span class="exhibit-number">${num}</span> ${title}</h3>
-    <span class="toggle-icon">▼</span>
+    <h3><span class="exhibit-number" aria-hidden="true">${num}</span> ${title}</h3>
+    <span class="toggle-icon" aria-hidden="true">▼</span>
   `;
 
   const body = document.createElement('div');
   body.className = 'exhibit-body';
+  body.id = `exhibit-body-${num}`;
 
   exhibit.appendChild(header);
   exhibit.appendChild(body);
   container.appendChild(exhibit);
 
   // Collapse/expand toggle
-  header.addEventListener('click', () => {
+  function toggleExhibit(): void {
     const isCollapsed = body.style.display === 'none';
     body.style.display = isCollapsed ? '' : 'none';
+    header.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
     const icon = header.querySelector('.toggle-icon')!;
     icon.textContent = isCollapsed ? '▼' : '▶';
+  }
+
+  header.addEventListener('click', toggleExhibit);
+  header.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleExhibit();
+    }
   });
 
   // Render exhibit content
