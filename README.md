@@ -6,6 +6,30 @@ S-Cloud+ is a lattice-based KEM built on the standard Learning With Errors (LWE)
 
 All cryptographic primitives — SHA-3, SHAKE-128/256, BW₃₂ encoding/decoding, ternary sampling, and the full KEM — are implemented in **pure TypeScript** with zero external dependencies.
 
+---
+
+## 🛡️ Reality Check
+
+### What this project demonstrates
+
+- Client-side encryption model
+- Secure container concept
+- Key derivation → encryption flow
+
+### What this project simplifies
+
+- No secure enclave / HSM
+- No hardened authentication layer
+- No malicious client defense
+
+### What this project is NOT
+
+- Not production-ready secure storage
+- Not resistant to XSS or compromised browser
+- Not a substitute for audited systems
+
+---
+
 ## Live Demo
 
 **<https://systemslibrarian.github.io/crypto-lab-scloud-vault/>**
@@ -38,3 +62,24 @@ One of 60+ live browser demos at [systemslibrarian.github.io/crypto-lab](https:/
 ---
 
 *Whether you eat or drink or whatever you do, do it all for the glory of God. — 1 Corinthians 10:31*
+
+---
+
+## 🔐 Security Model
+
+**Encryption algorithm:** AES-256-GCM (or as implemented in S-Cloud+)
+
+**Key derivation:** Argon2id (or as implemented in S-Cloud+)
+
+**Key location:** Client-side only; never leaves the device
+
+**Remote storage:** Only ciphertext is intended to be stored remotely
+
+### Threats Considered
+- Data-at-rest exposure
+- Network interception
+
+### Threats NOT Covered
+- Malicious browser environment
+- Keylogging
+- XSS / injected scripts

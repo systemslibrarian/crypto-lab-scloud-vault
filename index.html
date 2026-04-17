@@ -178,12 +178,69 @@
 
   <main class="container" id="main-content">
     <div class="intro">
-      <h2>S-Cloud+ KEM Explorer</h2>
-      <p>Interactive demonstration of the S-Cloud+ lattice-based Key Encapsulation Mechanism
-         (ePrint 2024/1306, Wang et al. — Tsinghua University / Huawei).
-         Featuring BW₃₂ Barnes-Wall lattice coding, ternary secrets, and FO-transformed
-         IND-CCA2 security.</p>
+      <h2>S-Cloud+ Vault Explorer</h2>
+      <p>Interactive demonstration of the S-Cloud+ Vault — a secure container for encrypted payloads using lattice-based Key Encapsulation (ePrint 2024/1306, Wang et al. — Tsinghua University / Huawei).
+         Featuring BW₃₂ Barnes-Wall lattice coding, ternary secrets, and FO-transformed IND-CCA2 security.</p>
     </div>
+
+    <!-- Reality Check Panel -->
+    <section class="reality-check-panel">
+      <h3>Reality Check</h3>
+      <div class="reality-cols">
+        <div class="reality-col">
+          <h4>What this project demonstrates</h4>
+          <ul>
+            <li>Client-side encryption model</li>
+            <li>Secure container concept</li>
+            <li>Key derivation → encryption flow</li>
+          </ul>
+        </div>
+        <div class="reality-col">
+          <h4>What this project simplifies</h4>
+          <ul>
+            <li>No secure enclave / HSM</li>
+            <li>No hardened authentication layer</li>
+            <li>No malicious client defense</li>
+          </ul>
+        </div>
+        <div class="reality-col">
+          <h4>What this project is NOT</h4>
+          <ul>
+            <li>Not production-ready secure storage</li>
+            <li>Not resistant to XSS or compromised browser</li>
+            <li>Not a substitute for audited systems</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Security Model Panel -->
+    <section class="security-model-panel">
+      <h3>Security Model</h3>
+      <ul>
+        <li><strong>Encryption algorithm:</strong> AES-256-GCM (or as implemented in S-Cloud+)</li>
+        <li><strong>Key derivation:</strong> Argon2id (or as implemented in S-Cloud+)</li>
+        <li><strong>Key location:</strong> Client-side only; never leaves the device</li>
+        <li><strong>Remote storage:</strong> Only ciphertext is intended to be stored remotely</li>
+      </ul>
+      <div class="threat-cols">
+        <div class="threat-col">
+          <h4>Threats Considered</h4>
+          <ul>
+            <li>Data-at-rest exposure</li>
+            <li>Network interception</li>
+          </ul>
+        </div>
+        <div class="threat-col">
+          <h4>Threats NOT Covered</h4>
+          <ul>
+            <li>Malicious browser environment</li>
+            <li>Keylogging</li>
+            <li>XSS / injected scripts</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <div id="exhibits"></div>
 

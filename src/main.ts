@@ -6,6 +6,7 @@ import { renderExhibit3 } from './exhibits/exhibit3';
 import { renderExhibit4 } from './exhibits/exhibit4';
 import { renderExhibit5 } from './exhibits/exhibit5';
 import { renderExhibit6 } from './exhibits/exhibit6';
+import { renderLiveEncryptionView } from './exhibits/liveEncryptionView';
 
 // Initialize theme (reads from localStorage, already set by anti-flash script)
 initTheme();

@@ -20,6 +20,7 @@ export function renderExhibit5(container: HTMLElement): void {
       <button class="btn" id="encaps-run">▶ Run Encaps + Decaps</button>
       <button class="btn btn-danger" id="encaps-tamper">🔓 Tamper + Detect</button>
     </div>
+    <div class="micro-hint">Encrypted payload is what would be stored remotely. Losing your password results in permanent data loss.</div>
     <div id="encaps-output"></div>
   `;
 
