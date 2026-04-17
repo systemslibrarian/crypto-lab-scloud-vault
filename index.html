@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S-Cloud+ Vault — Lattice KEM Explorer</title>
+  <meta name="description" content="Interactive browser-based demo of S-Cloud+ KEM (ePrint 2024/1306) with BW₃₂ lattice coding, ternary secrets, and full encapsulation/decapsulation.">
+
+  <!-- Anti-flash: read theme from localStorage BEFORE any paint -->
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('scloud-vault-theme');
+        if (t === 'light' || t === 'dark') {
+          document.documentElement.setAttribute('data-theme', t);
+        }
+      } catch(e) {}
+    })();
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+    <h1><span class="logo">🔐</span> S-Cloud+ Vault</h1>
+    <div class="header-right">
+      <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="intro">
+      <h2>S-Cloud+ KEM Explorer</h2>
+      <p>Interactive demonstration of the S-Cloud+ lattice-based Key Encapsulation Mechanism
+         (ePrint 2024/1306, Wang et al. — Tsinghua University / Huawei).
+         Featuring BW₃₂ Barnes-Wall lattice coding, ternary secrets, and FO-transformed
+         IND-CCA2 security.</p>
+    </div>
+
+    <div id="exhibits"></div>
+  </main>
+
+  <footer class="site-footer">
+    Whether you eat or drink or whatever you do, do it all for the glory of God.
+    — 1 Corinthians 10:31
+  </footer>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
