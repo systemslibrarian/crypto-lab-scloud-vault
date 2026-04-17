@@ -2,7 +2,7 @@
  * Theme toggle: dark/light mode with localStorage persistence.
  */
 
-const STORAGE_KEY = 'scloud-vault-theme';
+const STORAGE_KEY = 'theme';
 
 export type Theme = 'dark' | 'light';
 
@@ -28,9 +28,9 @@ export function toggleTheme(): void {
 }
 
 function updateToggleButton(theme: Theme): void {
-  const btn = document.getElementById('theme-toggle');
+  const btn = document.getElementById('themeToggle');
   if (btn) {
-    btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
     btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   }
 }
@@ -39,7 +39,7 @@ export function initTheme(): void {
   const theme = getStoredTheme();
   setTheme(theme);
 
-  const btn = document.getElementById('theme-toggle');
+  const btn = document.getElementById('themeToggle');
   if (btn) {
     btn.addEventListener('click', toggleTheme);
   }

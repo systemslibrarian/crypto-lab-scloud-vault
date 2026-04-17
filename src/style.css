@@ -103,51 +103,6 @@ code, pre {
   font-family: var(--font-mono);
 }
 
-/* ── Header ─────────────────────────── */
-.site-header {
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.site-header h1 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.site-header h1 .logo {
-  font-size: 1.6rem;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-#theme-toggle {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.4rem 0.6rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: var(--text);
-  transition: border-color var(--transition);
-}
-#theme-toggle:hover {
-  border-color: var(--accent);
-}
-
 .param-select {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -437,7 +392,8 @@ code, pre {
 
 /* ── Focus styles ───────────────────── */
 .btn:focus-visible,
-#theme-toggle:focus-visible,
+.cl-theme-toggle:focus-visible,
+.cl-nav-btn:focus-visible,
 .param-select:focus-visible,
 .exhibit-header:focus-visible {
   outline: 2px solid var(--accent);
@@ -486,8 +442,74 @@ code, pre {
   border: 0;
 }
 
+/* ── Reality Panel ───────────────────── */
+.reality-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.reality-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.reality-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.reality-col h4 {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+
+.reality-col ul {
+  list-style: disc;
+  padding-left: 1.2rem;
+}
+
+.reality-col li {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .reality-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Insight Panel ──────────────────── */
+.insight-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.insight-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--accent);
+}
+
+.insight-panel p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
 /* ── Footer ─────────────────────────── */
-.site-footer {
+.scripture-footer {
   border-top: 1px solid var(--border);
   text-align: center;
   padding: 2rem 1.5rem;
@@ -514,16 +536,6 @@ code, pre {
 
 /* ── Responsive ─────────────────────── */
 @media (max-width: 768px) {
-  .site-header {
-    padding: 0.8rem 1rem;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .site-header h1 {
-    font-size: 1.1rem;
-  }
-
   .container {
     padding: 1rem;
   }

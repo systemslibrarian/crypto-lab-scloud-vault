@@ -10,22 +10,170 @@
   <script>
     (function() {
       try {
-        var t = localStorage.getItem('scloud-vault-theme');
+        var t = localStorage.getItem('theme');
         if (t === 'light' || t === 'dark') {
           document.documentElement.setAttribute('data-theme', t);
         }
       } catch(e) {}
     })();
   </script>
+
+  <style>
+/* ── Standardized Crypto Lab header ───────────────────── */
+.cl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 20px;
+  background: #0e1f1e;
+  position: relative;
+  overflow: hidden;
+}
+
+.cl-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(77, 207, 176, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77, 207, 176, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.cl-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.cl-badge {
+  width: 36px;
+  height: 36px;
+  background: #162b2a;
+  border: 1px solid #2a4a44;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4dcfb0;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.cl-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cl-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e8f5f2;
+  letter-spacing: 1.5px;
+  line-height: 1.2;
+}
+
+.cl-sub {
+  font-size: 11px;
+  color: #4dcfb0;
+  letter-spacing: 1px;
+  font-family: monospace;
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.cl-sub:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.cl-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.cl-nav-btn {
+  padding: 6px 14px;
+  font-size: 11px;
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #4dcfb0;
+  background: #162b2a;
+  border: 1px solid #2a4a44;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.cl-nav-btn:hover {
+  background: #1e3c3a;
+  border-color: #4dcfb0;
+}
+
+.cl-theme-toggle {
+  width: 36px;
+  height: 36px;
+  background: #162b2a;
+  border: 1px solid #2a4a44;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  color: #4dcfb0;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+
+.cl-theme-toggle:hover {
+  background: #1e3c3a;
+  border-color: #4dcfb0;
+}
+/* ────────────────────────────────────────────────────── */
+  </style>
 </head>
 
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <header class="site-header" role="banner">
-    <h1><span class="logo" aria-hidden="true">🔐</span> S-Cloud+ Vault</h1>
-    <div class="header-right">
-      <button id="theme-toggle" aria-label="Toggle theme">☀️</button>
+  <header class="cl-header">
+    <div class="cl-header-left">
+      <div class="cl-badge">CL</div>
+      <div class="cl-header-text">
+        <span class="cl-title">CRYPTO LAB</span>
+        <a class="cl-sub"
+           href="https://systemslibrarian.dev"
+           target="_blank"
+           rel="noopener">
+          systemslibrarian.dev
+        </a>
+      </div>
     </div>
+    <nav class="cl-header-nav">
+      <a class="cl-nav-btn"
+         href="https://github.com/systemslibrarian/crypto-lab-scloud-vault"
+         target="_blank"
+         rel="noopener">
+        GitHub
+      </a>
+      <button class="cl-theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        ☀
+      </button>
+    </nav>
   </header>
 
   <main class="container" id="main-content">
@@ -38,11 +186,48 @@
     </div>
 
     <div id="exhibits"></div>
+
+    <!-- Reality / Limits Panel -->
+    <section class="reality-panel">
+      <h3>Reality Check</h3>
+      <div class="reality-columns">
+        <div class="reality-col">
+          <h4>What This Demo <em>Is</em></h4>
+          <ul>
+            <li>A faithful TypeScript port of ePrint 2024/1306 parameters and algorithms</li>
+            <li>Real SHAKE-128/256 and SHA3-256 running in your browser (pure Keccak)</li>
+            <li>Full KEM round-trip: KeyGen → Encaps → Decaps with implicit rejection</li>
+            <li>BW₃₂ lattice coding with measurable error-correction radius</li>
+          </ul>
+        </div>
+        <div class="reality-col">
+          <h4>What This Demo <em>Is Not</em></h4>
+          <ul>
+            <li>Not constant-time — JavaScript cannot guarantee timing-safe execution</li>
+            <li>Not audited or suitable for production key exchange</li>
+            <li>Not a substitute for a vetted C/Rust implementation</li>
+            <li>Not endorsed by the S-Cloud+ authors or any standards body</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational Insight Panel -->
+    <section class="insight-panel">
+      <h3>What the Textbook Doesn't Show</h3>
+      <p>Standard LWE-KEM treatments stop at "add noise, hope it rounds away." S-Cloud+
+         takes a different path: Barnes-Wall BW₃₂ lattice coding provides structured error
+         correction that <strong>doubles the tolerable noise</strong> compared to simple
+         rounding. This is the key insight — by encoding each 5-bit message chunk into a
+         32-dimensional lattice point, the decoder can correct errors up to the packing
+         radius of BW₃₂, letting the authors shrink modulus and matrix dimensions while
+         maintaining the same security level. The result: smaller keys than FrodoKEM at
+         comparable strength, without relying on algebraic ring structure like ML-KEM.</p>
+    </section>
   </main>
 
-  <footer class="site-footer" role="contentinfo">
-    <p>Whether you eat or drink or whatever you do, do it all for the glory of God.
-    — 1 Corinthians 10:31</p>
+  <footer class="scripture-footer">
+    <p>So whether you eat or drink or whatever you do, do it all for the glory of God. — 1 Corinthians 10:31</p>
   </footer>
 
   <script type="module" src="/src/main.ts"></script>
