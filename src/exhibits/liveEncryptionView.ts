@@ -1,4 +1,4 @@
-import { aesGcmEncrypt, aesGcmDecrypt, randomBytes } from '../crypto/utils';
+
 
 export function renderLiveEncryptionView(container: HTMLElement): void {
   container.innerHTML = `
@@ -49,10 +49,21 @@ export function renderLiveEncryptionView(container: HTMLElement): void {
       passwordInput.classList.remove('input-error');
     }
     // Simple key derivation: SHA-256 hash (for demo only)
-    const key = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
-    const iv = randomBytes(12);
-    const ct = await aesGcmEncrypt(new TextEncoder().encode(pt), key, iv);
-    const out = new Uint8Array([...iv, ...new Uint8Array(ct)]);
+    const keyBytes = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+    const key = await window.crypto.subtle.importKey(
+      'raw', keyBytes, { name: 'AES-GCM' }, false, ['encrypt']
+    );
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const ctBuffer = await window.crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      new TextEncoder().encode(pt)
+    );
+    const ct = new Uint8Array(ctBuffer);
+    // Output: IV + ciphertext, base64
+    const out = new Uint8Array(iv.length + ct.length);
+    out.set(iv, 0);
+    out.set(ct, iv.length);
     ciphertextArea.value = btoa(String.fromCharCode(...out));
   }
 
