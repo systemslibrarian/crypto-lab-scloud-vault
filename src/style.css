@@ -163,6 +163,13 @@ code, pre {
   gap: 0.5rem;
 }
 
+.toggle-icon {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
 .exhibit-number {
   background: var(--accent);
   color: #fff;
