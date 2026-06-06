@@ -17,7 +17,10 @@ const STANDARDS: Ref[] = [
 ];
 
 const IDEAL_SVP: Ref[] = [
+  { authors: 'Ducas', year: '2017', title: 'Advances on Quantum Cryptanalysis of Ideal Lattices (accessible survey — start here)', venue: 'Nieuw Archief voor Wiskunde 5/18', url: 'https://www.nieuwarchief.nl/serie5/pdf/naw5-2017-18-3-184.pdf' },
   { authors: 'Cramer, Ducas, Peikert, Regev', year: '2016', title: 'Recovering Short Generators of Principal Ideals in Cyclotomic Rings', venue: 'EUROCRYPT 2016 · ePrint 2015/313', url: 'https://eprint.iacr.org/2015/313' },
+  { authors: 'de Boer, Ducas, Fehr', year: '2019', title: 'On the Quantum Complexity of the Continuous Hidden Subgroup Problem (machinery behind the ideal-SVP attacks)', venue: 'EUROCRYPT 2020 · ePrint 2019/716', url: 'https://eprint.iacr.org/2019/716' },
+  { authors: 'de Boer, Ducas, Pellet-Mary, Wesolowski', year: '2020', title: 'Random Self-reducibility of Ideal-SVP via Arakelov Random Walks (evidence FOR ideal-lattice hardness)', venue: 'CRYPTO 2020 · ePrint 2020/297', url: 'https://eprint.iacr.org/2020/297' },
   { authors: 'Cramer, Ducas, Wesolowski', year: '2017', title: 'Short Stickelberger Class Relations and Application to Ideal-SVP', venue: 'EUROCRYPT 2017 · ePrint 2016/885', url: 'https://eprint.iacr.org/2016/885' },
   { authors: 'Ducas, Plançon, Wesolowski', year: '2019', title: 'On the Shortness of Vectors to be found by the Ideal-SVP Quantum Algorithm', venue: 'CRYPTO 2019 · ePrint 2019/234', url: 'https://eprint.iacr.org/2019/234' },
   { authors: 'Cramer, Ducas, Wesolowski', year: '2021', title: 'Mildly Short Vectors in Cyclotomic Ideal Lattices in Quantum Polynomial Time', venue: 'Journal of the ACM 68(2)', url: 'https://hal.science/hal-03102234' },
@@ -38,7 +41,15 @@ const CRYPTANALYSIS_STATE: Ref[] = [
   { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (hybrid / meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021', url: 'https://eprint.iacr.org/2021/216' },
   { authors: 'Albrecht, Ducas', year: '2021', title: 'Lattice Attacks on NTRU and LWE: A History of Refinements', venue: 'survey · ePrint 2021/799', url: 'https://eprint.iacr.org/2021/799' },
   { authors: 'Ducas, van Woerden', year: '2021', title: 'NTRU Fatigue: How Stretched is Overstretched? (when a STRUCTURED scheme weakens)', venue: 'ASIACRYPT 2021 · ePrint 2021/999', url: 'https://eprint.iacr.org/2021/999' },
+  { authors: 'Albrecht, Ducas, Herold, Kirshanova, Postlethwaite, Stevens', year: '2019', title: 'The General Sieve Kernel and New Records in Lattice Reduction (G6K — the practical attack engine)', venue: 'EUROCRYPT 2019 · ePrint 2019/089', url: 'https://eprint.iacr.org/2019/089' },
   { authors: 'Ducas, Pulles, Stevens', year: '2025', title: 'Towards a Modern LLL Implementation (BLASter)', venue: 'IACR ePrint 2025/774', url: 'https://eprint.iacr.org/2025/774' },
+];
+
+// Concrete proof that open scrutiny breaks things — other PQC candidates that
+// fell soon after publication. Context for why limited review is a real caveat.
+const SCRUTINY_CAUGHT: Ref[] = [
+  { authors: 'Ducas, Yu', year: '2018', title: 'Learning Strikes Again: the Case of the DRS Signature Scheme (a NIST round-1 candidate, broken)', venue: 'ASIACRYPT 2018 · ePrint 2018/294', url: 'https://eprint.iacr.org/2018/294' },
+  { authors: 'de Boer, Ducas, Jeffery, de Wolf', year: '2018', title: 'Attacks on the AJPS Mersenne-based Cryptosystem', venue: 'PQCrypto 2018 · ePrint 2017/1171', url: 'https://eprint.iacr.org/2017/1171' },
 ];
 
 // Authoritative guidance favoring conservative / unstructured assumptions.
@@ -62,6 +73,7 @@ export function renderReferences(container: HTMLElement): void {
     ${group('Why avoid structured lattices? (the Ideal-SVP / Ring-LWE concern)', IDEAL_SVP)}
     ${group('Does structure actually help attackers? (recent, mixed evidence)', MODULE_ANALYSIS)}
     ${group('The moving target of lattice cryptanalysis (why margins matter)', CRYPTANALYSIS_STATE)}
+    ${group('What public scrutiny has caught (other PQC candidates broken)', SCRUTINY_CAUGHT)}
     ${group('Conservative guidance from national agencies', GUIDANCE)}
     ${group('Foundations (LWE, FO transform, Barnes-Wall decoding)', FOUNDATIONS)}
     <div class="callout"><span class="callout-title">A note on the comparison</span>

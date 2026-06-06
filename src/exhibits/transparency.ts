@@ -79,6 +79,16 @@ export function renderTransparency(container: HTMLElement): void {
        conventional attack and keeps an ~8-bit safety margin. That's the open process working — and
        it's the kind of independent checking Scloud+ still needs more of.</p>
 
+    <div class="callout">
+      <span class="callout-title">Scrutiny has teeth — it really does break things</span>
+      This isn't hypothetical. Multiple early post-quantum candidates were broken within months of
+      publication once experts looked closely: the DRS lattice-signature scheme (a NIST round-1 entry)
+      fell to a learning attack, and the AJPS Mersenne-based cryptosystem was cut down by lattice and
+      meet-in-the-middle attacks. That's the open process working as intended — and it's exactly the
+      kind of independent stress-testing Scloud+ has had comparatively little of so far. It says
+      nothing bad about Scloud+; it just means the evidence isn't in yet.
+    </div>
+
     <div class="takeaway">
       <span class="callout-title">Takeaway for learners</span>
       <p>Judge a scheme by three things: the <strong>assumption</strong> it rests on, the
