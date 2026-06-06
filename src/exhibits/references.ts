@@ -8,6 +8,8 @@ interface Ref { authors: string; year: string; title: string; venue: string; url
 
 const SCLOUD: Ref[] = [
   { authors: 'Wang, Zheng, Zhao, Qiu, Zeng, Yuan, Mu, Wang', year: '2024', title: 'Scloud+: An Efficient LWE-based KEM Without Ring/Module Structure', venue: 'IACR ePrint 2024/1306 · SSR 2024', url: 'https://eprint.iacr.org/2024/1306' },
+  { authors: 'Zheng, Wang, Fan, Zhao, Liu, Zhang', year: '2020', title: 'SCloud: Public Key Encryption and KEM Based on Learning With Errors (the original, predecessor of Scloud+)', venue: 'IACR ePrint 2020/095', url: 'https://eprint.iacr.org/2020/095' },
+  { authors: 'Tian, Wei, Xu, Wang, Wang, Qiu, Yao, Zeng', year: '2025', title: 'Fast Scloud+: A Fast Hardware Implementation for the Unstructured LWE-based KEM', venue: 'IACR ePrint 2025/497', url: 'https://eprint.iacr.org/2025/497' },
   { authors: 'Wang et al.', year: '2024', title: 'Post-quantum Hybrid ECDHE-Scloud+ Key Exchange for TLS 1.3', venue: 'IETF Internet-Draft (individual, not endorsed)', url: 'https://datatracker.ietf.org/doc/draft-wang-tls-hybrid-ecdh-scloud/' },
 ];
 
@@ -77,10 +79,18 @@ const GUIDANCE: Ref[] = [
   { authors: 'BSI (Germany)', year: '2024', title: 'Cryptographic Mechanisms: Recommendations and Key Lengths (TR-02102)', venue: 'Federal Office for Information Security', url: 'https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr02102/tr02102_node.html' },
 ];
 
+// The BW₃₂ / lattice-coding angle — what lets Scloud+ shrink its parameters.
+const BW_CODING: Ref[] = [
+  { authors: 'Kuninets, Leevik, Malygina, Melnichuk, Nabokov', year: '2025', title: 'On the Construction of Barnes-Wall Lattices and their Application in Cryptography (constructions + Reed-Muller connections)', venue: 'IACR ePrint 2025/1640', url: 'https://eprint.iacr.org/2025/1640' },
+  { authors: 'Micciancio, Nicolosi', year: '2008', title: 'Efficient Bounded Distance Decoders for Barnes-Wall Lattices (the BW decoder Scloud+ uses)', venue: 'ISIT 2008', url: 'https://ieeexplore.ieee.org/document/4595427' },
+  { authors: 'Lyu, Liu, Lai, Ling, Chen', year: '2022', title: 'Lattice Codes for Lattice-Based PKE', venue: 'Designs, Codes and Cryptography · ePrint 2022/874', url: 'https://eprint.iacr.org/2022/874' },
+  { authors: 'Saliba, Luzzi, Ling', year: '2020', title: 'Wyner-Ziv Reconciliation for Key Exchange based on Ring-LWE (Barnes-Wall + bounded-distance decoding in a KEM)', venue: 'IACR ePrint 2020/076', url: 'https://eprint.iacr.org/2020/076' },
+  { authors: 'et al.', year: '2024', title: 'Tailorable Codes for Lattice-Based KEMs, with Applications to Compact ML-KEM Instantiations', venue: 'TCHES 2025 · ePrint 2024/1243', url: 'https://eprint.iacr.org/2024/1243' },
+];
+
 const FOUNDATIONS: Ref[] = [
   { authors: 'Regev', year: '2005', title: 'On Lattices, Learning with Errors, Random Linear Codes, and Cryptography', venue: 'STOC 2005 · J. ACM 2009', url: 'https://cims.nyu.edu/~regev/papers/qcrypto.pdf' },
   { authors: 'Hofheinz, Hövelmanns, Kiltz', year: '2017', title: 'A Modular Analysis of the Fujisaki-Okamoto Transformation', venue: 'TCC 2017 · ePrint 2017/604', url: 'https://eprint.iacr.org/2017/604' },
-  { authors: 'Micciancio, Nicolosi', year: '2008', title: 'Efficient Bounded Distance Decoders for Barnes-Wall Lattices', venue: 'ISIT 2008', url: 'https://cseweb.ucsd.edu/~daniele/papers/BW.html' },
 ];
 
 export function renderReferences(container: HTMLElement): void {
@@ -96,7 +106,8 @@ export function renderReferences(container: HTMLElement): void {
     ${group('The moving target of lattice cryptanalysis (why margins matter)', CRYPTANALYSIS_STATE)}
     ${group('What public scrutiny has caught (other PQC candidates broken)', SCRUTINY_CAUGHT)}
     ${group('Conservative guidance from national agencies', GUIDANCE)}
-    ${group('Foundations (LWE, FO transform, Barnes-Wall decoding)', FOUNDATIONS)}
+    ${group('Barnes-Wall lattices & error-correcting codes for KEMs (the BW₃₂ angle)', BW_CODING)}
+    ${group('Foundations (LWE & the FO transform)', FOUNDATIONS)}
     <div class="callout"><span class="callout-title">A note on the comparison</span>
       The Ideal-SVP results above do <strong>not</strong> break Ring-LWE / Module-LWE or ML-KEM.
       They establish a hardness <em>gap</em> between ideal and general lattices, which is the
