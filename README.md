@@ -62,7 +62,7 @@ Sections are ordered easiest → deepest; no math background needed to start.
 
 ## Part of Crypto Lab
 
-One of 60+ live browser demos at
+One of 90+ live browser demos at
 [systemslibrarian.github.io/crypto-lab](https://systemslibrarian.github.io/crypto-lab/) — spanning
 Atbash (600 BCE) through NIST FIPS 203/204/205 (2024).
 
