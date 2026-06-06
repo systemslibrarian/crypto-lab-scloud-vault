@@ -21,7 +21,7 @@ export function renderBenchmark(container: HTMLElement): void {
       </select>
       <label class="inline-label">Iterations:
         <select id="bm-iters" class="param-select">
-          <option value="5">5</option><option value="10" selected>10</option><option value="25">25</option>
+          <option value="5" selected>5</option><option value="10">10</option><option value="25">25</option>
         </select>
       </label>
       <button class="btn" id="bm-run">▶ Run benchmark</button>
@@ -100,7 +100,11 @@ export function renderBenchmark(container: HTMLElement): void {
 
   runBtn.addEventListener('click', runLive);
   drawSpec();
-  runLive();
+  // NOTE: do NOT auto-run the live benchmark — it runs many full KEM round-trips
+  // and would freeze the page on load. It runs only when the user clicks.
+  liveEl.innerHTML = `<div class="callout"><span class="callout-title">Click “▶ Run benchmark”</span>
+    Timing runs on demand so the page opens instantly. (For 256-bit, higher iteration
+    counts can take a few seconds — that's the matrix work, single-threaded in JS.)</div>`;
 }
 
 function msBar(label: string, ms: number, max: number): string {

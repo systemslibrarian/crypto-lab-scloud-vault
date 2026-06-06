@@ -60,6 +60,7 @@ const container = document.getElementById('exhibits')!;
 
 const bodies: HTMLElement[] = [];
 const headers: HTMLElement[] = [];
+const ensureRender: (() => void)[] = [];
 
 EXHIBITS.forEach((def, idx) => {
   const num = idx + 1;
@@ -92,8 +93,15 @@ EXHIBITS.forEach((def, idx) => {
   bodies.push(body);
   headers.push(header);
 
+  // Lazy render: collapsed sections (e.g. Performance) only build their content
+  // the first time they're opened, so nothing heavy runs on initial page load.
+  let rendered = false;
+  const ensure = (): void => { if (!rendered) { def.render(body); rendered = true; } };
+  ensureRender.push(ensure);
+
   function toggle(): void {
     const collapsed = body.style.display === 'none';
+    if (collapsed) ensure();
     body.style.display = collapsed ? '' : 'none';
     header.setAttribute('aria-expanded', collapsed ? 'true' : 'false');
     header.querySelector('.toggle-icon')!.textContent = collapsed ? '▼' : '▶';
@@ -103,12 +111,13 @@ EXHIBITS.forEach((def, idx) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
   });
 
-  def.render(body);
+  if (!def.collapsed) ensure();
 });
 
 // ── Expand / collapse all ──────────────────────────
 function setAll(open: boolean): void {
   bodies.forEach((body, i) => {
+    if (open) ensureRender[i]();
     body.style.display = open ? '' : 'none';
     headers[i].setAttribute('aria-expanded', open ? 'true' : 'false');
     headers[i].querySelector('.toggle-icon')!.textContent = open ? '▼' : '▶';
