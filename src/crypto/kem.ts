@@ -7,18 +7,22 @@
  *   - Scloud+.KEM  (IND-CCA2 via Fujisaki-Okamoto)         — Algorithms 9–11
  *
  * Faithful pieces:
- *   - Ternary secret with Hamming weight n/2 (constant-weight distribution)
+ *   - Matrix LWE (FrodoKEM-style): the public key is a matrix B = A·S + E, so
+ *     EVERY ciphertext coordinate gets an INDEPENDENT mask. (An earlier version
+ *     masked c2 with a single shared scalar — that leaks message differences and
+ *     is not IND-CPA. This version fixes that.)
+ *   - Ternary secret columns/rows with Hamming weight n/2
  *   - Centered-binomial error ρ(η)
- *   - BW₃₂-style lattice coding for error correction
- *   - REAL FO transform with implicit rejection: decaps re-encrypts the
- *     recovered message and returns a pseudo-random key on any mismatch.
- *   - Hash instantiation matching the paper: H = SHA3-256, G = SHA3-512,
- *     K/F = SHAKE-256.
+ *   - BW₃₂-style lattice coding for error correction (one 32-dim codeword per row)
+ *   - REAL FO transform with implicit rejection: decaps re-encrypts the recovered
+ *     message and returns a pseudo-random key on any mismatch.
+ *   - Hashes per the paper: H = SHA3-256, G = SHA3-512, K/F = SHAKE-256.
  *
- * Simplification (see params.ts): the real scheme keeps B as an m×n̄ matrix and
- * applies modulus switching (q,q1,q2) plus Z[i] BW₃₂ labeling. For readable,
- * fast in-browser demos we use a single-vector formulation. The math is still
- * real unstructured LWE + ternary + binomial + BW₃₂ + FO — just smaller.
+ * Simplification (see params.ts): we use a small message width n̄ = 32 (one BW₃₂
+ * block per row) and the demo's simplified 5-bits-per-block BW₃₂ coder, with
+ * modest dimensions so it runs fast in the browser and the data stays readable.
+ * The math is real matrix-LWE + ternary + binomial + BW₃₂ + FO — just scaled
+ * down, so byte sizes differ from the official spec sizes (shown alongside).
  */
 
 import { SCloudParams } from './params';
@@ -28,70 +32,69 @@ import {
   sampleCenteredBinomial,
   deterministicCenteredBinomial,
 } from './sampling';
-import { generateMatrixA, matVecMul, matTransVecMul, vecAdd } from './matrix';
+import { generateMatrixA } from './matrix';
 import { bw32EncodeMessage, bw32DecodeMessage } from './bw32';
 import {
   randomBytes, concatBytes, constantTimeEquals, packIntegers,
   unpackIntegers, bytesToHex,
 } from './utils';
 
+/** Message width: each row of the message/ciphertext is one 32-dim BW₃₂ block. */
+const NBAR = 32;
+
 // ── Key Types ──────────────────────────
+// Matrices are stored flat, row-major, with dimensions given by the params:
+//   B : n × NBAR        (public)
+//   S : n × NBAR        (secret)
+//   C1: msgBlocks × n   (ciphertext part 1)
+//   C2: msgBlocks × NBAR(ciphertext part 2)
 
 export interface SCloudPublicKey {
   seedA: Uint8Array;
-  b: Int32Array;       // n-dimensional vector in Z_q  (demo's stand-in for B)
+  B: Int32Array;       // n × NBAR, flat row-major
 }
 
 export interface SCloudSecretKey {
-  s: Int16Array;       // ternary secret
+  S: Int16Array;       // n × NBAR ternary, flat row-major
   pk: SCloudPublicKey;
-  hPk: Uint8Array;     // H(pk) — hash of public key
-  z: Uint8Array;       // implicit-rejection seed (paper's z)
+  hPk: Uint8Array;     // H(pk)
+  z: Uint8Array;       // implicit-rejection seed
 }
 
 export interface SCloudCiphertext {
-  c1: Int32Array;      // n-dimensional vector in Z_q
-  c2: Int32Array;      // (msgBlocks · 32)-dimensional vector in Z_q
+  C1: Int32Array;      // msgBlocks × n, flat row-major
+  C2: Int32Array;      // msgBlocks × NBAR, flat row-major
 }
 
-export interface SCloudKeyPair {
-  pk: SCloudPublicKey;
-  sk: SCloudSecretKey;
-}
+export interface SCloudKeyPair { pk: SCloudPublicKey; sk: SCloudSecretKey; }
+export interface SCloudEncapsResult { ct: SCloudCiphertext; ss: Uint8Array; }
 
-export interface SCloudEncapsResult {
-  ct: SCloudCiphertext;
-  ss: Uint8Array;
-}
+const mod = (x: number, q: number) => ((x % q) + q) % q;
 
 // ── Serialization ──────────────────────
 
 export function serializePublicKey(pk: SCloudPublicKey, params: SCloudParams): Uint8Array {
-  const bPacked = packIntegers(Array.from(pk.b), params.logQ);
-  return concatBytes(pk.seedA, bPacked);
+  return concatBytes(pk.seedA, packIntegers(Array.from(pk.B), params.logQ));
 }
 
 export function deserializePublicKey(data: Uint8Array, params: SCloudParams): SCloudPublicKey {
   const seedA = data.slice(0, params.seedBytes);
-  const bPacked = data.slice(params.seedBytes);
-  const b = new Int32Array(unpackIntegers(bPacked, params.n, params.logQ));
-  return { seedA, b };
+  const B = new Int32Array(unpackIntegers(data.slice(params.seedBytes), params.n * NBAR, params.logQ));
+  return { seedA, B };
 }
 
 export function serializeCiphertext(ct: SCloudCiphertext, params: SCloudParams): Uint8Array {
-  const c1Packed = packIntegers(Array.from(ct.c1), params.logQ);
-  const c2Packed = packIntegers(Array.from(ct.c2), params.logQ);
-  return concatBytes(c1Packed, c2Packed);
+  const c1 = packIntegers(Array.from(ct.C1), params.logQ);
+  const c2 = packIntegers(Array.from(ct.C2), params.logQ);
+  return concatBytes(c1, c2);
 }
 
 export function deserializeCiphertext(data: Uint8Array, params: SCloudParams): SCloudCiphertext {
-  const c1ByteLen = Math.ceil((params.n * params.logQ) / 8);
-  const c1Packed = data.slice(0, c1ByteLen);
-  const c2Packed = data.slice(c1ByteLen);
-  const c1 = new Int32Array(unpackIntegers(c1Packed, params.n, params.logQ));
-  const c2Entries = params.msgBlocks * 32;
-  const c2 = new Int32Array(unpackIntegers(c2Packed, c2Entries, params.logQ));
-  return { c1, c2 };
+  const c1Entries = params.msgBlocks * params.n;
+  const c1ByteLen = Math.ceil((c1Entries * params.logQ) / 8);
+  const C1 = new Int32Array(unpackIntegers(data.slice(0, c1ByteLen), c1Entries, params.logQ));
+  const C2 = new Int32Array(unpackIntegers(data.slice(c1ByteLen), params.msgBlocks * NBAR, params.logQ));
+  return { C1, C2 };
 }
 
 // ── Hash functions (H, G, K) — paper §7 instantiation ──
@@ -115,45 +118,50 @@ function K(key: Uint8Array, ctBytes: Uint8Array, ssBytes: number): Uint8Array {
 // ── Deterministic randomness for Enc (the FO "coins") ──
 
 interface EncRandomness {
-  sPrime: Int16Array;   // ephemeral ternary secret
-  ePrime: Int16Array;   // error for c1 (length n)
-  eDoublePrime: Int16Array; // error for c2 (length msgBlocks·32)
+  Sp: Int16Array;   // ephemeral secret S'  (msgBlocks × n)
+  E1: Int16Array;   // error for C1         (msgBlocks × n)
+  E2: Int16Array;   // error for C2         (msgBlocks × NBAR)
 }
 
 /**
- * Expand `coins` (via SHAKE-256, the paper's F) into the ephemeral secret and
- * the two error vectors. Deterministic: the same coins always yield the same
- * randomness, which is exactly what the FO re-encryption check relies on.
+ * Expand `coins` (via SHAKE-256, the paper's F) into S', E1, E2. Deterministic:
+ * identical coins → identical randomness, which is what the FO re-encryption
+ * check relies on.
  */
 function expandCoins(coins: Uint8Array, params: SCloudParams): EncRandomness {
-  const c2Len = params.msgBlocks * 32;
-  const etaBytesN = Math.ceil((2 * params.eta * params.n) / 8);
-  const etaBytesC2 = Math.ceil((2 * params.eta * c2Len) / 8);
-  // bytes for ternary permutation (4 per index is plenty) + both error streams
-  const ternBytes = params.n * 4;
-  const total = ternBytes + etaBytesN + etaBytesC2;
-  const stream = shake256(coins, total);
+  const { n, msgBlocks, eta } = params;
+  const ternBytesPerRow = n * 4;                       // 4 bytes / Fisher-Yates step
+  const ternBytes = ternBytesPerRow * msgBlocks;
+  const e1Bytes = Math.ceil((2 * eta * msgBlocks * n) / 8);
+  const e2Bytes = Math.ceil((2 * eta * msgBlocks * NBAR) / 8);
+  const stream = shake256(coins, ternBytes + e1Bytes + e2Bytes);
 
   let off = 0;
-  const sPrime = deterministicTernary(stream.subarray(off, off + ternBytes), params.n, params.hw);
-  off += ternBytes;
-  const ePrime = deterministicCenteredBinomial(stream.subarray(off, off + etaBytesN), params.n, params.eta);
-  off += etaBytesN;
-  const eDoublePrime = deterministicCenteredBinomial(stream.subarray(off, off + etaBytesC2), c2Len, params.eta);
+  const Sp = new Int16Array(msgBlocks * n);
+  for (let i = 0; i < msgBlocks; i++) {
+    const row = deterministicTernary(stream.subarray(off, off + ternBytesPerRow), n, params.hw);
+    Sp.set(row, i * n);
+    off += ternBytesPerRow;
+  }
+  const E1 = deterministicCenteredBinomial(stream.subarray(off, off + e1Bytes), msgBlocks * n, eta);
+  off += e1Bytes;
+  const E2 = deterministicCenteredBinomial(stream.subarray(off, off + e2Bytes), msgBlocks * NBAR, eta);
 
-  return { sPrime, ePrime, eDoublePrime };
+  return { Sp, E1, E2 };
 }
 
-/** Deterministic constant-weight ternary vector from a byte stream. */
+/**
+ * Deterministic constant-weight ternary vector from a byte stream.
+ * Requires rand.length >= 4·n so each Fisher-Yates step reads its own
+ * non-overlapping 4-byte window (no reuse, no modular wrap-around).
+ */
 function deterministicTernary(rand: Uint8Array, n: number, hw: number): Int16Array {
   const nPlus = hw >> 1;
-  const nMinus = hw >> 1;
   const arr = new Int16Array(n);
   for (let i = 0; i < nPlus; i++) arr[i] = 1;
-  for (let i = nPlus; i < nPlus + nMinus; i++) arr[i] = -1;
-  // Deterministic Fisher-Yates using the supplied randomness (4 bytes / step)
+  for (let i = nPlus; i < nPlus + nPlus; i++) arr[i] = -1;
   for (let i = n - 1; i > 0; i--) {
-    const o = (i * 4) % (rand.length - 3);
+    const o = i * 4; // non-overlapping window; rand is sized 4n
     const r = (rand[o] | (rand[o + 1] << 8) | (rand[o + 2] << 16) | ((rand[o + 3] & 0x7f) << 24)) >>> 0;
     const j = r % (i + 1);
     const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
@@ -161,92 +169,105 @@ function deterministicTernary(rand: Uint8Array, n: number, hw: number): Int16Arr
   return arr;
 }
 
-// ── PKE core ──────────────────────────
+// ── PKE core (matrix LWE) ─────────────
 
 /**
  * Scloud+.PKE.Enc — deterministic given message `m` and coins.
- * c1 = Aᵀ·s' + e'                       (LWE sample hiding s')
- * c2 = (b·s') + e'' + Encode(m)         (message masked by a shared LWE term)
+ * C1 = S'·A + E1                        (msgBlocks × n)  — hides S'
+ * C2 = S'·B + E2 + Encode(m)            (msgBlocks × NBAR) — message, independently masked
  */
 export function pkeEncrypt(
   pk: SCloudPublicKey, m: Uint8Array, coins: Uint8Array, params: SCloudParams
 ): SCloudCiphertext {
-  const A = generateMatrixA(pk.seedA, params);
-  const { sPrime, ePrime, eDoublePrime } = expandCoins(coins, params);
+  const { n, q, msgBlocks } = params;
+  const A = generateMatrixA(pk.seedA, params); // n × n (rows)
+  const { Sp, E1, E2 } = expandCoins(coins, params);
 
-  // c1 = Aᵀ·s' + e'  (mod q)
-  const ATs = matTransVecMul(A, sPrime, params.n, params.q);
-  const c1 = vecAdd(ATs, ePrime, params.n, params.q);
-
-  // shared scalar  b·s'  (mod q) — the demo's stand-in for B'·s'
-  let bDotS = 0;
-  for (let i = 0; i < params.n; i++) bDotS += pk.b[i] * sPrime[i];
-  bDotS = ((bDotS % params.q) + params.q) % params.q;
-
-  const encoded = bw32EncodeMessage(m, params.msgBlocks, params.q);
-  const c2Len = params.msgBlocks * 32;
-  const c2 = new Int32Array(c2Len);
-  for (let i = 0; i < c2Len; i++) {
-    c2[i] = (((bDotS + eDoublePrime[i] + encoded[i]) % params.q) + params.q) % params.q;
+  // C1 = S'·A + E1
+  const C1 = new Int32Array(msgBlocks * n);
+  for (let i = 0; i < msgBlocks; i++) {
+    for (let t = 0; t < n; t++) {
+      let acc = 0;
+      for (let u = 0; u < n; u++) acc += Sp[i * n + u] * A[u][t];
+      C1[i * n + t] = mod(acc + E1[i * n + t], q);
+    }
   }
-  return { c1, c2 };
+
+  // C2 = S'·B + E2 + Encode(m)
+  const encoded = bw32EncodeMessage(m, msgBlocks, q); // msgBlocks × NBAR, row-major
+  const C2 = new Int32Array(msgBlocks * NBAR);
+  for (let i = 0; i < msgBlocks; i++) {
+    for (let k = 0; k < NBAR; k++) {
+      let acc = 0;
+      for (let u = 0; u < n; u++) acc += Sp[i * n + u] * pk.B[u * NBAR + k];
+      C2[i * NBAR + k] = mod(acc + E2[i * NBAR + k] + encoded[i * NBAR + k], q);
+    }
+  }
+
+  return { C1, C2 };
 }
 
 /**
  * Scloud+.PKE.Dec — recover the message.
- * v = c2 − (s·c1);  m' = BW₃₂-decode(v)
+ * D = C2 − C1·S ;  m' = BW₃₂-decode(D row by row)
  */
 export function pkeDecrypt(sk: SCloudSecretKey, ct: SCloudCiphertext, params: SCloudParams): Uint8Array {
-  let sDotC1 = 0;
-  for (let i = 0; i < params.n; i++) sDotC1 += sk.s[i] * ct.c1[i];
-  sDotC1 = ((sDotC1 % params.q) + params.q) % params.q;
-
-  const c2Len = params.msgBlocks * 32;
-  const v = new Int32Array(c2Len);
-  for (let i = 0; i < c2Len; i++) {
-    v[i] = (((ct.c2[i] - sDotC1) % params.q) + params.q) % params.q;
+  const { n, q, msgBlocks } = params;
+  const D = new Int32Array(msgBlocks * NBAR);
+  for (let i = 0; i < msgBlocks; i++) {
+    for (let k = 0; k < NBAR; k++) {
+      let acc = 0;
+      for (let u = 0; u < n; u++) acc += ct.C1[i * n + u] * sk.S[u * NBAR + k];
+      D[i * NBAR + k] = mod(ct.C2[i * NBAR + k] - acc, q);
+    }
   }
-  const decoded = bw32DecodeMessage(v, params.msgBlocks, params.q);
-  return decoded.slice(0, params.msgBytes);
+  return bw32DecodeMessage(D, msgBlocks, q).slice(0, params.msgBytes);
 }
 
 // ── KEM (KeyGen / Encaps / Decaps) ──────
 
 /**
  * Scloud+.KEM.KeyGen — Algorithm 9.
- *   s ← ternary(n, hw);  e ← ρ(η)
- *   b = A·s + e ;  pk = (seedA, b)
- *   sk = (s, pk, H(pk), z)
+ *   S ← ternary (n × n̄, weight n/2 per column);  E ← ρ(η)
+ *   B = A·S + E ;  pk = (seedA, B) ;  sk = (S, pk, H(pk), z)
  */
 export function keyGen(params: SCloudParams): SCloudKeyPair {
+  const { n, q } = params;
   const seedA = randomBytes(params.seedBytes);
   const A = generateMatrixA(seedA, params);
-  const s = sampleTernarySecret(params.n, params.hw);
-  const e = sampleCenteredBinomial(params.n, params.eta);
-  const As = matVecMul(A, s, params.n, params.q);
-  const b = vecAdd(As, e, params.n, params.q);
 
-  const pk: SCloudPublicKey = { seedA, b };
+  // S: each column an independent ternary vector of weight hw
+  const S = new Int16Array(n * NBAR);
+  for (let k = 0; k < NBAR; k++) {
+    const col = sampleTernarySecret(n, params.hw);
+    for (let j = 0; j < n; j++) S[j * NBAR + k] = col[j];
+  }
+  const E = sampleCenteredBinomial(n * NBAR, params.eta);
+
+  // B = A·S + E
+  const B = new Int32Array(n * NBAR);
+  for (let j = 0; j < n; j++) {
+    for (let k = 0; k < NBAR; k++) {
+      let acc = 0;
+      for (let t = 0; t < n; t++) acc += A[j][t] * S[t * NBAR + k];
+      B[j * NBAR + k] = mod(acc + E[j * NBAR + k], q);
+    }
+  }
+
+  const pk: SCloudPublicKey = { seedA, B };
   const hPk = H(pk, params);
   const z = randomBytes(32);
-  const sk: SCloudSecretKey = { s, pk, hPk, z };
-  return { pk, sk };
+  return { pk, sk: { S, pk, hPk, z } };
 }
 
-/**
- * Scloud+.KEM.Encaps — Algorithm 10.
- *   m ← random ;  (coins, k) = G(m ‖ H(pk))
- *   C = Enc(pk, m, coins) ;  ss = K(k ‖ C)
- */
+/** Scloud+.KEM.Encaps — Algorithm 10. */
 export function encaps(pk: SCloudPublicKey, params: SCloudParams): SCloudEncapsResult {
   const r = encapsDetailed(pk, params);
   return { ct: r.ct, ss: r.ss };
 }
 
 export interface EncapsDetail extends SCloudEncapsResult {
-  m: Uint8Array;
-  coins: Uint8Array;
-  k: Uint8Array;
+  m: Uint8Array; coins: Uint8Array; k: Uint8Array;
 }
 
 export function encapsDetailed(pk: SCloudPublicKey, params: SCloudParams): EncapsDetail {
@@ -258,13 +279,7 @@ export function encapsDetailed(pk: SCloudPublicKey, params: SCloudParams): Encap
   return { ct, ss, m, coins, k };
 }
 
-/**
- * Scloud+.KEM.Decaps — Algorithm 11 (FO with implicit rejection).
- *   m' = Dec(sk, C)
- *   (coins', k') = G(m' ‖ H(pk))
- *   C' = Enc(pk, m', coins')
- *   ss = K(k' ‖ C)  if C == C'   else   K(z ‖ C)
- */
+/** Scloud+.KEM.Decaps — Algorithm 11 (FO with implicit rejection). */
 export function decaps(sk: SCloudSecretKey, ct: SCloudCiphertext, params: SCloudParams): Uint8Array {
   return decapsDetailed(sk, ct, params).ss;
 }
@@ -272,8 +287,8 @@ export function decaps(sk: SCloudSecretKey, ct: SCloudCiphertext, params: SCloud
 export interface DecapsDetail {
   mPrime: Uint8Array;
   ctPrime: SCloudCiphertext;
-  reEncMatch: boolean;   // did re-encryption reproduce the ciphertext?
-  rejected: boolean;     // implicit-rejection path taken?
+  reEncMatch: boolean;
+  rejected: boolean;
   ss: Uint8Array;
 }
 
@@ -285,12 +300,11 @@ export function decapsDetailed(
   const ctPrime = pkeEncrypt(sk.pk, mPrime, coins, params);
 
   const ctBytes = serializeCiphertext(ct, params);
-  const ctPrimeBytes = serializeCiphertext(ctPrime, params);
-  const reEncMatch = constantTimeEquals(ctBytes, ctPrimeBytes);
+  const reEncMatch = constantTimeEquals(ctBytes, serializeCiphertext(ctPrime, params));
 
   const ss = reEncMatch
-    ? K(k, ctBytes, params.ssBytes)        // accept: ss = K(k' ‖ C)
-    : K(sk.z, ctBytes, params.ssBytes);    // reject: ss = K(z  ‖ C)
+    ? K(k, ctBytes, params.ssBytes)      // accept: ss = K(k' ‖ C)
+    : K(sk.z, ctBytes, params.ssBytes);  // reject: ss = K(z  ‖ C)
 
   return { mPrime, ctPrime, reEncMatch, rejected: !reEncMatch, ss };
 }
@@ -305,12 +319,10 @@ export interface KEMRoundtripResult {
   ssDecaps: Uint8Array;
   match: boolean;
   decaps: DecapsDetail;
-  // tamper results
   tamperedCt?: SCloudCiphertext;
   ssTampered?: Uint8Array;
   tamperMatch?: boolean;
   tamperDecaps?: DecapsDetail;
-  // sizes / display
   seedA: string;
   pkSize: number;
   skSize: number;
@@ -323,7 +335,7 @@ export function fullRoundtrip(params: SCloudParams, tamper = false): KEMRoundtri
   const decap = decapsDetailed(sk, ct, params);
 
   const pkSize = serializePublicKey(pk, params).length;
-  const sPacked = packIntegers(Array.from(sk.s).map(v => v + 1), 2);
+  const sPacked = packIntegers(Array.from(sk.S).map(v => v + 1), 2);
   const skSize = sPacked.length + pkSize + 32 + 32;
 
   const result: KEMRoundtripResult = {
@@ -354,7 +366,8 @@ export function fullRoundtrip(params: SCloudParams, tamper = false): KEMRoundtri
   return result;
 }
 
-// ── Toy LWE demo for Exhibit "The LWE Core" ──────
+// ── Toy single-vector LWE demo for the "LWE Core" exhibit ──────
+// (A deliberately minimal b = A·s + e illustration — not the KEM.)
 
 export interface ToyLWEDemo {
   A: Int32Array[];
@@ -373,7 +386,7 @@ export function toyLWEDemo(n = 8, q = 251): ToyLWEDemo {
   for (let i = 0; i < n; i++) {
     let sum = 0;
     for (let j = 0; j < n; j++) sum += A[i][j] * s[j];
-    b[i] = (((sum + e[i]) % q) + q) % q;
+    b[i] = mod(sum + e[i], q);
   }
   return { A, s, e, b, n, q };
 }

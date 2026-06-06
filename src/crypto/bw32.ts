@@ -109,15 +109,17 @@ export function bw32Decode(received: Int32Array, q: number): number {
   const transform = new Float64Array(centered);
   fwht(transform);
 
-  // Step 3: Find maximum absolute correlation. Our encoder always emits +row(m)
-  // (never a globally negated codeword), so the peak is positive; using |·|
-  // keeps the soft-decision decoder robust to large noise excursions.
+  // Step 3: Find the maximum SIGNED correlation. Our encoder only ever emits
+  // +row(m) (never a globally negated codeword), so the maximum-likelihood
+  // estimate is the index most POSITIVELY correlated with the received vector.
+  // Using the absolute value would be wrong: a strongly negative transform[i]
+  // means the input is close to −row(i), which is not a valid codeword, and must
+  // not be selected.
   let bestIdx = 0;
   let bestVal = -Infinity;
   for (let i = 0; i < BW_DIM; i++) {
-    const absVal = Math.abs(transform[i]);
-    if (absVal > bestVal) {
-      bestVal = absVal;
+    if (transform[i] > bestVal) {
+      bestVal = transform[i];
       bestIdx = i;
     }
   }

@@ -134,22 +134,23 @@ function stepKeyGen(run: Run): string {
       <span class="guide-phase-label">Step 1 of 3 — runs once, by the key owner</span>
       <h4>Key Generation</h4>
       <div class="formula">
-        s ← ternary secret (weight n/2)&nbsp;&nbsp; e ← small error<br>
-        b = <span class="hl">A·s + e</span>&nbsp; (mod q)&nbsp;&nbsp;→&nbsp;&nbsp;
-        public key = (seed for A, <span class="hl">b</span>),&nbsp; secret key = s
+        S ← ternary secret matrix (each column weight n/2)&nbsp;&nbsp; E ← small error<br>
+        B = <span class="hl">A·S + E</span>&nbsp; (mod q)&nbsp;&nbsp;→&nbsp;&nbsp;
+        public key = (seed for A, <span class="hl">B</span>),&nbsp; secret key = S
       </div>
       <p><strong>A</strong> is a big public random matrix (expanded from a short seed). The owner
-         picks a secret <strong>s</strong> and tiny noise <strong>e</strong>, then publishes
-         <strong>b = A·s + e</strong>.</p>
-      ${vec('Secret s (ternary, the private key)', sk.s)}
-      ${vec('b = A·s + e (part of the public key)', pk.b, true)}
+         picks a secret <strong>S</strong> and tiny noise <strong>E</strong>, then publishes
+         <strong>B = A·S + E</strong>. (Using a matrix — not a single vector — is what gives every
+         ciphertext coordinate its own independent mask later.)</p>
+      ${vec('Secret S (ternary matrix — the private key, first rows shown)', sk.S)}
+      ${vec('B = A·S + E (the public key, first rows shown)', pk.B, true)}
       <p style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted)">
         seed for A: ${bytesToHex(pk.seedA)} &nbsp;|&nbsp; H(pk): ${bytesToHex(sk.hPk).slice(0, 16)}…</p>
       <div class="callout why">
         <span class="callout-title">Why is this safe?</span>
-        Recovering <strong>s</strong> from <strong>(A, b)</strong> is the <strong>Learning With
+        Recovering <strong>S</strong> from <strong>(A, B)</strong> is the <strong>Learning With
         Errors (LWE)</strong> problem — believed hard even for quantum computers. The small error
-        <strong>e</strong> is what makes it hard: without it, you could just solve the linear system.
+        <strong>E</strong> is what makes it hard: without it, you could just solve the linear system.
       </div>
     </div>`;
 }
@@ -163,15 +164,15 @@ function stepEncaps(run: Run): string {
       <div class="formula">
         m ← random message<br>
         (coins, k) = <span class="hl">G</span>(m ‖ H(pk))&nbsp;&nbsp;<span style="color:var(--text-muted)">— G = SHA3-512</span><br>
-        c1 = Aᵀ·s′ + e′,&nbsp; c2 = (b·s′) + e″ + <span class="hl">Encode(m)</span><br>
+        C1 = S′·A + E1,&nbsp; C2 = S′·B + E2 + <span class="hl">Encode(m)</span><br>
         shared secret = <span class="hl">K</span>(k ‖ ciphertext)
       </div>
       <p>The sender invents a random message <strong>m</strong>, derives all randomness from it
          (so decapsulation can re-check later), builds an LWE ciphertext that hides <strong>m</strong>,
          and derives the shared secret from <strong>m</strong>.</p>
       ${bytes('Random message m', enc.m)}
-      ${vec('c1 = Aᵀ·s′ + e′', enc.ct.c1, true)}
-      ${vec('c2 (carries the BW₃₂-encoded message)', enc.ct.c2, true)}
+      ${vec('C1 = S′·A + E1', enc.ct.C1, true)}
+      ${vec('C2 (carries the BW₃₂-encoded message, independently masked)', enc.ct.C2, true)}
       ${bytes('Shared secret K (this is the prize)', enc.ss, true)}
       <div class="callout why">
         <span class="callout-title">Why encode m with BW₃₂?</span>
@@ -190,11 +191,11 @@ function stepDecaps(run: Run): string {
       <span class="guide-phase-label">Step 3 of 3 — runs on the receiver's side</span>
       <h4>Decapsulation</h4>
       <div class="formula">
-        v = c2 − (s·c1)&nbsp;&nbsp;→&nbsp;&nbsp;m′ = <span class="hl">Decode(v)</span><br>
+        D = C2 − C1·S&nbsp;&nbsp;→&nbsp;&nbsp;m′ = <span class="hl">Decode(D)</span><br>
         re-encrypt with m′ and check it matches the ciphertext (next step)<br>
         shared secret = K(k′ ‖ ciphertext)
       </div>
-      <p>Using the secret <strong>s</strong>, the receiver cancels the big shared LWE term, leaving
+      <p>Using the secret <strong>S</strong>, the receiver cancels the big shared LWE term, leaving
          the noisy encoded message. BW₃₂ decoding error-corrects it back to <strong>m′</strong>.</p>
       ${bytes('Recovered message m′', dec.mPrime)}
       <div class="fo-check">
@@ -248,7 +249,7 @@ function stepRecap(run: Run): string {
       <span class="guide-phase-label">Recap</span>
       <h4>You just ran a full post-quantum key exchange</h4>
       <ol style="color:var(--text-muted);margin-left:1.2rem">
-        <li><strong>KeyGen</strong> published b = A·s + e and kept s secret (LWE hardness).</li>
+        <li><strong>KeyGen</strong> published B = A·S + E and kept S secret (LWE hardness).</li>
         <li><strong>Encaps</strong> hid a random message m in a ciphertext and derived key K.</li>
         <li><strong>Decaps</strong> used s to recover m and re-derive the same K.</li>
         <li><strong>FO transform</strong> made tampering produce useless keys, not exploitable errors.</li>
