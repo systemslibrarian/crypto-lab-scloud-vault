@@ -15,6 +15,7 @@ const SCLOUD: Ref[] = [
 
 const STANDARDS: Ref[] = [
   { authors: 'NIST', year: '2024', title: 'ML-KEM (Module-Lattice KEM)', venue: 'FIPS 203', url: 'https://csrc.nist.gov/pubs/fips/203/final' },
+  { authors: 'NIST (Alagic et al.)', year: '2022', title: 'Status Report on the Third Round of the NIST PQC Standardization Process (the open process that selected Kyber)', venue: 'NIST IR 8413', url: 'https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8413.pdf' },
   { authors: 'Naehrig, Alkim, Bos, Ducas, Easterbrook, LaMacchia, Longa, Mironov, Nikolaenko, Peikert, Raghunathan, Stebila', year: '2020', title: 'FrodoKEM: Learning With Errors Key Encapsulation', venue: 'NIST PQC / ISO', url: 'https://frodokem.org/' },
   { authors: 'Bos, Costello, Ducas, Mironov, Naehrig, Nikolaenko, Raghunathan, Stebila', year: '2016', title: 'Frodo: Take off the Ring! Practical, Quantum-Secure Key Exchange from LWE (origin of the unstructured-LWE KEM approach)', venue: 'ACM CCS 2016 · ePrint 2016/659', url: 'https://eprint.iacr.org/2016/659' },
   { authors: 'de Boer, van Woerden', year: '2025', title: 'Lattice-based Cryptography: A survey on the security of the NIST finalists (Kyber/Dilithium/Falcon)', venue: 'IACR ePrint 2025/304', url: 'https://eprint.iacr.org/2025/304' },
