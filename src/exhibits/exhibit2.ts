@@ -37,6 +37,14 @@ export function renderExhibit2(container: HTMLElement): void {
         </div>
       </div>
     </div>
+    <div class="callout warn">
+      <span class="callout-title">Objectivity check: ternary isn't a free lunch</span>
+      Small, sparse secrets have their <em>own</em> attack surface — dedicated hybrid and
+      meet-in-the-middle attacks (May 2021; Bi et al. 2022) target exactly this structure. That's why
+      Scloud+ fixes the weight at <code>n/2</code> (not sparser), and why the <em>hybrid</em> attack
+      gives the lowest security number in the paper's own analysis. Ternary buys speed and small
+      parameters, but it must be chosen carefully — it is a trade-off, not a pure win.
+    </div>
   `;
 
   const animateBtn = container.querySelector('#ternary-animate') as HTMLButtonElement;

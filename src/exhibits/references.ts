@@ -33,8 +33,10 @@ const MODULE_ANALYSIS: Ref[] = [
 // Ongoing general lattice cryptanalysis — why concrete security estimates for
 // ALL these schemes keep moving, and why conservative margins matter.
 const CRYPTANALYSIS_STATE: Ref[] = [
-  { authors: 'Ducas, Pulles', year: '2023', title: 'Does the Dual-Sieve Attack on LWE even Work? (Accurate Score Prediction for Dual-Sieve Attacks)', venue: 'CRYPTO 2023 · ePrint 2023/1850', url: 'https://eprint.iacr.org/2023/1850' },
-  { authors: 'Ducas, Engelberts, Loyer', year: '2025', title: "Wagner's Algorithm Provably Runs in Subexponential Time for SIS∞", venue: 'IACR ePrint 2025/575', url: 'https://eprint.iacr.org/2025/575' },
+  { authors: 'Ducas, Pulles', year: '2023', title: 'Does the Dual-Sieve Attack on Learning with Errors even Work?', venue: 'CRYPTO 2023 · ePrint 2023/302', url: 'https://eprint.iacr.org/2023/302' },
+  { authors: 'Ducas, Pulles', year: '2023', title: 'Accurate Score Prediction for Dual-Sieve Attacks', venue: 'IACR ePrint 2023/1850', url: 'https://eprint.iacr.org/2023/1850' },
+  { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (hybrid / meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021', url: 'https://eprint.iacr.org/2021/216' },
+  { authors: 'Ducas, Pulles, Stevens', year: '2025', title: 'Towards a Modern LLL Implementation (BLASter)', venue: 'IACR ePrint 2025/774', url: 'https://eprint.iacr.org/2025/774' },
 ];
 
 // Authoritative guidance favoring conservative / unstructured assumptions.

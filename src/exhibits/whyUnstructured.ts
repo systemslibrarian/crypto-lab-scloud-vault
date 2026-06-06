@@ -7,10 +7,10 @@
 
 export function renderWhyUnstructured(container: HTMLElement): void {
   container.innerHTML = `
-    <p>It's tempting to read "China built a bigger, slower scheme and skipped the math everyone else
-       uses" as odd. It isn't. The choice between <strong>structured</strong> and
-       <strong>unstructured</strong> lattices is a genuine, unresolved trade-off that serious
-       cryptographers — and national agencies — actively disagree about. Here's the real reasoning.</p>
+    <p>The choice between <strong>structured</strong> and <strong>unstructured</strong> lattices is a
+       genuine, unresolved trade-off that serious cryptographers — and national agencies — disagree
+       about in good faith. This section lays out <em>both</em> sides as evenly as possible, including
+       the real criticisms of each, so you can weigh them yourself. There is no consensus "winner."</p>
 
     <div class="callout">
       <span class="callout-title">The two bets in one sentence</span>
@@ -76,6 +76,37 @@ export function renderWhyUnstructured(container: HTMLElement): void {
       the most conservative assumption (Scloud+ / FrodoKEM) is equally rational. Many real deployments
       hedge by running <strong>both at once</strong> in a hybrid — which is exactly what the Scloud+
       IETF draft proposes (ECDHE + Scloud+ together).
+    </div>
+
+    <h4>Being objective: what Scloud+ actually gives up</h4>
+    <p>A fair picture has to state Scloud+'s downsides plainly — the conservative bet is not free:</p>
+    <div class="callout warn">
+      <span class="callout-title">Honest criticisms of Scloud+</span>
+      <ul style="margin:0.25rem 0 0 1.2rem">
+        <li><strong>Not standardized.</strong> It's a research paper plus an <em>individual</em> IETF
+            draft with no formal standing — versus ML-KEM, a finalized federal standard.</li>
+        <li><strong>Bigger and slower than ML-KEM.</strong> Keys/ciphertexts are several KB and many
+            times larger; it's faster than FrodoKEM but nowhere near ML-KEM.</li>
+        <li><strong>Mostly self-analyzed.</strong> The security analysis is strong but largely by the
+            authors; independent third-party cryptanalysis is still thin.</li>
+        <li><strong>Ternary secrets aren't a free lunch.</strong> Sparse/small secrets enable
+            dedicated <em>hybrid</em> and meet-in-the-middle attacks (May 2021; Bi et al. 2022). In the
+            paper's own Table 4 the hybrid attack yields the <em>lowest</em> security figure — which is
+            exactly why Scloud+ fixes the Hamming weight at n/2 rather than going sparser.</li>
+        <li><strong>Novel components need review.</strong> The BW₃₂ labeling/delabeling is new
+            engineering; new code paths are where bugs and side channels hide.</li>
+      </ul>
+    </div>
+
+    <div class="callout">
+      <span class="callout-title">How confident can we even be in the numbers?</span>
+      Concrete "bits of security" are <em>estimates</em>, not facts — and the estimates move. Claimed
+      improvements to the dual attack against NIST candidates (Guo–Johansson 2021; MATZOV 2022) were
+      later shown by Ducas–Pulles (CRYPTO 2023) to rest on an "Independence Heuristic" that gives
+      <em>wrong</em> predictions, and lattice-reduction tooling keeps getting faster (e.g. flatter
+      2023, BLASter 2025). The honest takeaway applies to <strong>every</strong> lattice scheme,
+      ML-KEM included: published security levels carry genuine uncertainty, which is why margins and
+      ongoing scrutiny matter for all of them.
     </div>
 
     <div class="takeaway">

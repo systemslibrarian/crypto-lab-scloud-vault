@@ -34,7 +34,7 @@ const EXHIBITS: ExhibitDef[] = [
   { title: 'Key Generation', level: 'core', render: renderExhibit4 },
   { title: 'Encapsulation, Decapsulation & the FO Transform', level: 'core', render: renderExhibit5 },
   { title: 'Scloud+ vs FrodoKEM vs ML-KEM', level: '', render: renderExhibit6 },
-  { title: 'Is the Conservative Bet Crazy? (Structured vs Unstructured)', level: 'beginner', render: renderWhyUnstructured },
+  { title: 'Structured vs Unstructured: The Real Trade-off', level: 'beginner', render: renderWhyUnstructured },
   { title: 'Performance', level: '', render: renderBenchmark, collapsed: true },
   { title: 'Transparency & Review', level: 'beginner', render: renderTransparency },
   { title: 'References & Further Reading', level: '', render: renderReferences, collapsed: true },
