@@ -16,6 +16,7 @@ const SCLOUD: Ref[] = [
 const STANDARDS: Ref[] = [
   { authors: 'NIST', year: '2024', title: 'ML-KEM (Module-Lattice KEM)', venue: 'FIPS 203', url: 'https://csrc.nist.gov/pubs/fips/203/final' },
   { authors: 'Naehrig, Alkim, Bos, Ducas, Easterbrook, LaMacchia, Longa, Mironov, Nikolaenko, Peikert, Raghunathan, Stebila', year: '2020', title: 'FrodoKEM: Learning With Errors Key Encapsulation', venue: 'NIST PQC / ISO', url: 'https://frodokem.org/' },
+  { authors: 'Bos, Costello, Ducas, Mironov, Naehrig, Nikolaenko, Raghunathan, Stebila', year: '2016', title: 'Frodo: Take off the Ring! Practical, Quantum-Secure Key Exchange from LWE (origin of the unstructured-LWE KEM approach)', venue: 'ACM CCS 2016 · ePrint 2016/659', url: 'https://eprint.iacr.org/2016/659' },
   { authors: 'de Boer, van Woerden', year: '2025', title: 'Lattice-based Cryptography: A survey on the security of the NIST finalists (Kyber/Dilithium/Falcon)', venue: 'IACR ePrint 2025/304', url: 'https://eprint.iacr.org/2025/304' },
 ];
 
@@ -51,6 +52,7 @@ const CRYPTANALYSIS_STATE: Ref[] = [
   { authors: 'Ducas, Pulles', year: '2023', title: 'Does the Dual-Sieve Attack on Learning with Errors even Work?', venue: 'CRYPTO 2023 · ePrint 2023/302', url: 'https://eprint.iacr.org/2023/302' },
   { authors: 'Ducas, Pulles', year: '2023', title: 'Accurate Score Prediction for Dual-Sieve Attacks', venue: 'IACR ePrint 2023/1850', url: 'https://eprint.iacr.org/2023/1850' },
   { authors: 'Albrecht, Ducas', year: '2021', title: 'Lattice Attacks on NTRU and LWE: A History of Refinements', venue: 'survey · ePrint 2021/799', url: 'https://eprint.iacr.org/2021/799' },
+  { authors: 'Albrecht et al.', year: '2018', title: 'Estimate all the {LWE, NTRU} schemes! (the “LWE estimator” behind concrete bit-security numbers)', venue: 'SCN 2018 · ePrint 2018/331', url: 'https://eprint.iacr.org/2018/331' },
   { authors: 'Ducas, van Woerden', year: '2021', title: 'NTRU Fatigue: How Stretched is Overstretched? (when a STRUCTURED scheme weakens)', venue: 'ASIACRYPT 2021 · ePrint 2021/999', url: 'https://eprint.iacr.org/2021/999' },
   { authors: 'Albrecht, Ducas, Herold, Kirshanova, Postlethwaite, Stevens', year: '2019', title: 'The General Sieve Kernel and New Records in Lattice Reduction (G6K — the practical attack engine)', venue: 'EUROCRYPT 2019 · ePrint 2019/089', url: 'https://eprint.iacr.org/2019/089' },
   { authors: 'Ducas, Pulles, Stevens', year: '2025', title: 'Towards a Modern LLL Implementation (BLASter)', venue: 'IACR ePrint 2025/774', url: 'https://eprint.iacr.org/2025/774' },
@@ -63,20 +65,37 @@ const SCRUTINY_CAUGHT: Ref[] = [
   { authors: 'de Boer, Ducas, Jeffery, de Wolf', year: '2018', title: 'Attacks on the AJPS Mersenne-based Cryptosystem', venue: 'PQCrypto 2018 · ePrint 2017/1171', url: 'https://eprint.iacr.org/2017/1171' },
 ];
 
+// Scrutiny cuts both ways — it also catches flawed ATTACK claims, fast.
+const SCRUTINY_BOTH_WAYS: Ref[] = [
+  { authors: 'Chen', year: '2024', title: 'Quantum Algorithms for Lattice Problems (claimed a polynomial-time quantum LWE algorithm)', venue: 'IACR ePrint 2024/555', url: 'https://eprint.iacr.org/2024/555' },
+  { authors: 'Shmueli', year: '2024', title: 'A Note on Quantum Algorithms for Lattice Problems (identified the fatal flaw within days)', venue: 'IACR ePrint 2024/583', url: 'https://eprint.iacr.org/2024/583' },
+];
+
 // Ternary / sparse-secret specific attacks — the trade-off Scloud+'s fixed
 // Hamming-weight ternary secret has to manage.
 const TERNARY_ATTACKS: Ref[] = [
   { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021 · ePrint 2021/216', url: 'https://eprint.iacr.org/2021/216' },
   { authors: 'Chi, Cho, Kim, Lee', year: '2026', title: 'Asymptotic Analysis of Ternary Sparse LWE', venue: 'IACR ePrint 2026/630', url: 'https://eprint.iacr.org/2026/630' },
   { authors: 'Bi, Liu, Lu, Luo, Wang', year: '2026', title: 'An Improved Hybrid Dual Attack on LWE with Sparse Secrets', venue: 'IACR ePrint 2026/1060', url: 'https://eprint.iacr.org/2026/1060' },
+  { authors: 'Bhattacharya, Garcia-Morchon, Player, Tolhuizen', year: '2019', title: 'Achieving Secure and Efficient Lattice-based PKE: the Impact of the Secret-Key Distribution (Gaussian vs binomial vs ternary vs fixed-weight ternary)', venue: 'IACR ePrint 2019/389', url: 'https://eprint.iacr.org/2019/389' },
   { authors: 'Hhan, Hong, Kim, Lee, Lee', year: '2026', title: 'From Perfect to Approximate Hints: Efficient LWE Secret Recovery Leveraging Low Hamming Weight', venue: 'IACR ePrint 2026/1081', url: 'https://eprint.iacr.org/2026/1081' },
   { authors: 'Kalam, Sarkar, Meier', year: '2024', title: 'A Combinatorial Attack on Ternary Sparse Learning with Errors (sLWE)', venue: 'IACR ePrint 2024/2007', url: 'https://eprint.iacr.org/2024/2007' },
+  { authors: 'Lee, Lee, Son, Wang', year: '2024', title: 'Improved Meet-LWE Attack via Ternary Trees', venue: 'PKC 2024 · ePrint 2024/824', url: 'https://eprint.iacr.org/2024/824' },
 ];
 
 // Authoritative guidance favoring conservative / unstructured assumptions.
 const GUIDANCE: Ref[] = [
   { authors: 'ANSSI (France)', year: '2022', title: 'ANSSI views on the Post-Quantum Cryptography transition', venue: 'National cybersecurity agency guidance', url: 'https://cyber.gouv.fr/en/publications/anssi-views-post-quantum-cryptography-transition' },
   { authors: 'BSI (Germany)', year: '2024', title: 'Cryptographic Mechanisms: Recommendations and Key Lengths (TR-02102)', venue: 'Federal Office for Information Security', url: 'https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr02102/tr02102_node.html' },
+];
+
+// Decryption-failure attacks — WHY the failure rate must be astronomically
+// small (failures leak the secret key), which is the job BW₃₂ does for Scloud+.
+const DFR_ATTACKS: Ref[] = [
+  { authors: 'D’Anvers, Vercauteren, Verbauwhede', year: '2019', title: 'On the Impact of Decryption Failures on the Security of LWE/LWR-based Schemes (introduces “failure boosting”)', venue: 'PKC 2019 · ePrint 2018/1089', url: 'https://eprint.iacr.org/2018/1089' },
+  { authors: 'D’Anvers, Rossi, Virdia', year: '2019', title: '(One) Failure Is Not an Option: Bootstrapping the Search for Failures (directional failure boosting)', venue: 'EUROCRYPT 2020 · ePrint 2019/1399', url: 'https://eprint.iacr.org/2019/1399' },
+  { authors: 'D’Anvers, Batsleer', year: '2021', title: 'Multitarget Decryption Failure Attacks and their Application to Saber and Kyber', venue: 'PKC 2022 · ePrint 2021/193', url: 'https://eprint.iacr.org/2021/193' },
+  { authors: 'Hövelmanns, Hülsing, Majenz', year: '2022', title: 'Failing Gracefully: Decryption Failures and the Fujisaki-Okamoto Transform', venue: 'ASIACRYPT 2022 · ePrint 2022/365', url: 'https://eprint.iacr.org/2022/365' },
 ];
 
 // The BW₃₂ / lattice-coding angle — what lets Scloud+ shrink its parameters.
@@ -105,7 +124,9 @@ export function renderReferences(container: HTMLElement): void {
     ${group('Ternary / sparse-secret attacks (the trade-off ternary secrets manage)', TERNARY_ATTACKS)}
     ${group('The moving target of lattice cryptanalysis (why margins matter)', CRYPTANALYSIS_STATE)}
     ${group('What public scrutiny has caught (other PQC candidates broken)', SCRUTINY_CAUGHT)}
+    ${group('Scrutiny cuts both ways — it also catches flawed attack claims', SCRUTINY_BOTH_WAYS)}
     ${group('Conservative guidance from national agencies', GUIDANCE)}
+    ${group('Decryption-failure attacks (why the failure rate must be tiny)', DFR_ATTACKS)}
     ${group('Barnes-Wall lattices & error-correcting codes for KEMs (the BW₃₂ angle)', BW_CODING)}
     ${group('Foundations (LWE & the FO transform)', FOUNDATIONS)}
     <div class="callout"><span class="callout-title">A note on the comparison</span>

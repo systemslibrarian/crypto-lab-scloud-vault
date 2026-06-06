@@ -16,6 +16,15 @@ export function renderExhibit3(container: HTMLElement): void {
     <p>This is the key differentiator: where FrodoKEM uses no error correction (limiting noise
        tolerance), S-Cloud+ uses BW₃₂ to significantly expand the allowable error margin.</p>
 
+    <div class="callout warn">
+      <span class="callout-title">Why must the failure rate be astronomically small (≈ 2⁻¹³⁴)?</span>
+      Because decryption failures <em>leak the secret key</em>. In "failure-boosting" attacks
+      (D'Anvers et al.), an adversary hunts for ciphertexts that fail to decrypt; each one is a
+      noisy equation about the secret, and enough of them recover it. So a tiny but non-zero failure
+      rate isn't just a correctness nicety — it's a security requirement, and pushing it down is
+      exactly the job BW₃₂ does for Scloud+.
+    </div>
+
     <h4>Encoding: 5-bit Message → 32-dimensional Coset Representative</h4>
     <div class="btn-group">
       <label class="inline-label">
