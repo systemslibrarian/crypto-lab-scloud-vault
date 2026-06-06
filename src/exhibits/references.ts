@@ -14,6 +14,12 @@ const SCLOUD: Ref[] = [
 const STANDARDS: Ref[] = [
   { authors: 'NIST', year: '2024', title: 'ML-KEM (Module-Lattice KEM)', venue: 'FIPS 203', url: 'https://csrc.nist.gov/pubs/fips/203/final' },
   { authors: 'Naehrig, Alkim, Bos, Ducas, Easterbrook, LaMacchia, Longa, Mironov, Nikolaenko, Peikert, Raghunathan, Stebila', year: '2020', title: 'FrodoKEM: Learning With Errors Key Encapsulation', venue: 'NIST PQC / ISO', url: 'https://frodokem.org/' },
+  { authors: 'de Boer, van Woerden', year: '2025', title: 'Lattice-based Cryptography: A survey on the security of the NIST finalists (Kyber/Dilithium/Falcon)', venue: 'IACR ePrint 2025/304', url: 'https://eprint.iacr.org/2025/304' },
+];
+
+// Independent cryptanalysis OF Scloud+ — early, but it has begun.
+const SCLOUD_ATTACKS: Ref[] = [
+  { authors: 'Bai, Huang, Duan, Hu', year: '2025', title: 'Efficient Key Recovery via Correlation Power Analysis on Scloud+ (a side-channel attack on an unprotected implementation — not a break of the math)', venue: 'IACR ePrint 2025/721', url: 'https://eprint.iacr.org/2025/721' },
 ];
 
 const IDEAL_SVP: Ref[] = [
@@ -29,6 +35,8 @@ const IDEAL_SVP: Ref[] = [
 
 // Recent work probing whether algebraic structure actually helps attackers.
 const MODULE_ANALYSIS: Ref[] = [
+  { authors: 'Ogilvie', year: '2026', title: 'On the Concrete Hardness Gap Between MLWE and LWE (the "structure = pure efficiency" heuristic fails at realistic parameters)', venue: 'IACR ePrint 2026/279', url: 'https://eprint.iacr.org/2026/279' },
+  { authors: 'Hou, Jiang', year: '2026', title: 'Careful with the Ring: Enhanced Hybrid Decoding Attacks against Module/Ring-LWE', venue: 'IACR ePrint 2026/366', url: 'https://eprint.iacr.org/2026/366' },
   { authors: 'Ducas, Engelberts, de Perthuis', year: '2025', title: 'Predicting Module-Lattice Reduction (answering Kyber’s open question Q8)', venue: 'IACR ePrint 2025/1904', url: 'https://eprint.iacr.org/2025/1904' },
   { authors: 'Ducas, Loyer', year: '2025', title: 'Lattice Reduction via Dense Sublattices: A Cryptanalytic No-Go', venue: 'IACR ePrint 2025/1694', url: 'https://eprint.iacr.org/2025/1694' },
 ];
@@ -38,7 +46,6 @@ const MODULE_ANALYSIS: Ref[] = [
 const CRYPTANALYSIS_STATE: Ref[] = [
   { authors: 'Ducas, Pulles', year: '2023', title: 'Does the Dual-Sieve Attack on Learning with Errors even Work?', venue: 'CRYPTO 2023 · ePrint 2023/302', url: 'https://eprint.iacr.org/2023/302' },
   { authors: 'Ducas, Pulles', year: '2023', title: 'Accurate Score Prediction for Dual-Sieve Attacks', venue: 'IACR ePrint 2023/1850', url: 'https://eprint.iacr.org/2023/1850' },
-  { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (hybrid / meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021', url: 'https://eprint.iacr.org/2021/216' },
   { authors: 'Albrecht, Ducas', year: '2021', title: 'Lattice Attacks on NTRU and LWE: A History of Refinements', venue: 'survey · ePrint 2021/799', url: 'https://eprint.iacr.org/2021/799' },
   { authors: 'Ducas, van Woerden', year: '2021', title: 'NTRU Fatigue: How Stretched is Overstretched? (when a STRUCTURED scheme weakens)', venue: 'ASIACRYPT 2021 · ePrint 2021/999', url: 'https://eprint.iacr.org/2021/999' },
   { authors: 'Albrecht, Ducas, Herold, Kirshanova, Postlethwaite, Stevens', year: '2019', title: 'The General Sieve Kernel and New Records in Lattice Reduction (G6K — the practical attack engine)', venue: 'EUROCRYPT 2019 · ePrint 2019/089', url: 'https://eprint.iacr.org/2019/089' },
@@ -50,6 +57,14 @@ const CRYPTANALYSIS_STATE: Ref[] = [
 const SCRUTINY_CAUGHT: Ref[] = [
   { authors: 'Ducas, Yu', year: '2018', title: 'Learning Strikes Again: the Case of the DRS Signature Scheme (a NIST round-1 candidate, broken)', venue: 'ASIACRYPT 2018 · ePrint 2018/294', url: 'https://eprint.iacr.org/2018/294' },
   { authors: 'de Boer, Ducas, Jeffery, de Wolf', year: '2018', title: 'Attacks on the AJPS Mersenne-based Cryptosystem', venue: 'PQCrypto 2018 · ePrint 2017/1171', url: 'https://eprint.iacr.org/2017/1171' },
+];
+
+// Ternary / sparse-secret specific attacks — the trade-off Scloud+'s fixed
+// Hamming-weight ternary secret has to manage.
+const TERNARY_ATTACKS: Ref[] = [
+  { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021 · ePrint 2021/216', url: 'https://eprint.iacr.org/2021/216' },
+  { authors: 'Chi, Cho, Kim, Lee', year: '2026', title: 'Asymptotic Analysis of Ternary Sparse LWE', venue: 'IACR ePrint 2026/630', url: 'https://eprint.iacr.org/2026/630' },
+  { authors: 'Bi, Liu, Lu, Luo, Wang', year: '2026', title: 'An Improved Hybrid Dual Attack on LWE with Sparse Secrets', venue: 'IACR ePrint 2026/1060', url: 'https://eprint.iacr.org/2026/1060' },
 ];
 
 // Authoritative guidance favoring conservative / unstructured assumptions.
@@ -69,9 +84,11 @@ export function renderReferences(container: HTMLElement): void {
     <p>Everything in this demo traces back to public, primary sources. Use these to verify the
        claims and dig deeper.</p>
     ${group('The scheme itself', SCLOUD)}
+    ${group('Independent cryptanalysis of Scloud+ (early, but it has started)', SCLOUD_ATTACKS)}
     ${group('Standards & the schemes it is compared to', STANDARDS)}
     ${group('Why avoid structured lattices? (the Ideal-SVP / Ring-LWE concern)', IDEAL_SVP)}
     ${group('Does structure actually help attackers? (recent, mixed evidence)', MODULE_ANALYSIS)}
+    ${group('Ternary / sparse-secret attacks (the trade-off ternary secrets manage)', TERNARY_ATTACKS)}
     ${group('The moving target of lattice cryptanalysis (why margins matter)', CRYPTANALYSIS_STATE)}
     ${group('What public scrutiny has caught (other PQC candidates broken)', SCRUTINY_CAUGHT)}
     ${group('Conservative guidance from national agencies', GUIDANCE)}

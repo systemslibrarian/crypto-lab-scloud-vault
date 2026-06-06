@@ -47,6 +47,10 @@ export function renderTransparency(container: HTMLElement): void {
               the IETF and with no formal standing yet.</li>
           <li>Builds on well-studied ingredients (unstructured LWE, FO, Barnes-Wall codes)…</li>
           <li>…but the specific construction has had limited <em>independent</em> review so far.</li>
+          <li>Independent review <em>has begun</em>: a 2025 correlation-power-analysis side-channel
+              attack (Bai et al.) already recovers keys from unprotected Scloud+ implementations — not
+              a break of the math, but a normal early result and a reminder it needs side-channel
+              countermeasures like every PQC scheme.</li>
         </ul>
       </div>
     </div>

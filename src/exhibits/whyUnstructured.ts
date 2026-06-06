@@ -38,7 +38,10 @@ export function renderWhyUnstructured(container: HTMLElement): void {
               than unstructured reduction?" is literally open question <em>Q8</em> in the Kyber NIST
               submission — and it was still being quantified in 2025 (Ducas–Engelberts–de Perthuis,
               "Predicting Module-Lattice Reduction"), which finds the field's discriminant measurably
-              shifts the effective attack cost.</li>
+              shifts the effective attack cost. A 2026 analysis (Ogilvie, "Concrete Hardness Gap
+              Between MLWE and LWE") goes further: at <em>realistic</em> parameters the common
+              "structure is just efficiency" heuristic <em>fails</em>, and symmetries enable hybrid
+              attacks strictly stronger than on plain LWE.</li>
           <li><strong>It's the mainstream conservative view, not a Chinese outlier.</strong> France's
               <strong>ANSSI</strong> and Germany's <strong>BSI</strong> both recommend conservative /
               unstructured assumptions for long-term confidentiality, and <strong>FrodoKEM</strong>
