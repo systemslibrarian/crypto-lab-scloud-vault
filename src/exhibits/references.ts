@@ -31,12 +31,14 @@ const IDEAL_SVP: Ref[] = [
   { authors: 'Ducas, Plançon, Wesolowski', year: '2019', title: 'On the Shortness of Vectors to be found by the Ideal-SVP Quantum Algorithm', venue: 'CRYPTO 2019 · ePrint 2019/234', url: 'https://eprint.iacr.org/2019/234' },
   { authors: 'Cramer, Ducas, Wesolowski', year: '2021', title: 'Mildly Short Vectors in Cyclotomic Ideal Lattices in Quantum Polynomial Time', venue: 'Journal of the ACM 68(2)', url: 'https://hal.science/hal-03102234' },
   { authors: 'Biasse, Song', year: '2016', title: 'Efficient quantum algorithms for computing class groups and solving the principal ideal problem in arbitrary degree number fields', venue: 'SODA 2016', url: 'https://epubs.siam.org/doi/10.1137/1.9781611974331.ch64' },
+  { authors: 'Boudgoust, Gachon, Pellet-Mary', year: '2022', title: 'Some Easy Instances of Ideal-SVP (more automorphisms stabilizing an ideal → easier short vectors)', venue: 'CRYPTO 2022 · ePrint 2022/709', url: 'https://eprint.iacr.org/2022/709' },
 ];
 
 // Recent work probing whether algebraic structure actually helps attackers.
 const MODULE_ANALYSIS: Ref[] = [
   { authors: 'Ogilvie', year: '2026', title: 'On the Concrete Hardness Gap Between MLWE and LWE (the "structure = pure efficiency" heuristic fails at realistic parameters)', venue: 'IACR ePrint 2026/279', url: 'https://eprint.iacr.org/2026/279' },
   { authors: 'Hou, Jiang', year: '2026', title: 'Careful with the Ring: Enhanced Hybrid Decoding Attacks against Module/Ring-LWE', venue: 'IACR ePrint 2026/366', url: 'https://eprint.iacr.org/2026/366' },
+  { authors: 'Raya, Kumar, Dey, Gangopadhyay', year: '2026', title: 'CoNAN: A Structure-Aware Framework for Lattice Cryptanalysis (algebraic structure exploited to lower attack cost)', venue: 'IACR ePrint 2026/1041', url: 'https://eprint.iacr.org/2026/1041' },
   { authors: 'Ducas, Engelberts, de Perthuis', year: '2025', title: 'Predicting Module-Lattice Reduction (answering Kyber’s open question Q8)', venue: 'IACR ePrint 2025/1904', url: 'https://eprint.iacr.org/2025/1904' },
   { authors: 'Ducas, Loyer', year: '2025', title: 'Lattice Reduction via Dense Sublattices: A Cryptanalytic No-Go', venue: 'IACR ePrint 2025/1694', url: 'https://eprint.iacr.org/2025/1694' },
 ];
@@ -65,6 +67,8 @@ const TERNARY_ATTACKS: Ref[] = [
   { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021 · ePrint 2021/216', url: 'https://eprint.iacr.org/2021/216' },
   { authors: 'Chi, Cho, Kim, Lee', year: '2026', title: 'Asymptotic Analysis of Ternary Sparse LWE', venue: 'IACR ePrint 2026/630', url: 'https://eprint.iacr.org/2026/630' },
   { authors: 'Bi, Liu, Lu, Luo, Wang', year: '2026', title: 'An Improved Hybrid Dual Attack on LWE with Sparse Secrets', venue: 'IACR ePrint 2026/1060', url: 'https://eprint.iacr.org/2026/1060' },
+  { authors: 'Hhan, Hong, Kim, Lee, Lee', year: '2026', title: 'From Perfect to Approximate Hints: Efficient LWE Secret Recovery Leveraging Low Hamming Weight', venue: 'IACR ePrint 2026/1081', url: 'https://eprint.iacr.org/2026/1081' },
+  { authors: 'Kalam, Sarkar, Meier', year: '2024', title: 'A Combinatorial Attack on Ternary Sparse Learning with Errors (sLWE)', venue: 'IACR ePrint 2024/2007', url: 'https://eprint.iacr.org/2024/2007' },
 ];
 
 // Authoritative guidance favoring conservative / unstructured assumptions.
