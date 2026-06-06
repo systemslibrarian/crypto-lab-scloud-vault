@@ -7,7 +7,7 @@
 import { bw32Encode, bw32DemoRoundtrip, BW32Demo } from '../crypto/bw32';
 
 export function renderExhibit3(container: HTMLElement): void {
-  const q = 32768; // Use Scloud+-128 modulus for demo
+  const q = 4096; // Real Scloud+ modulus q = 2^12
 
   container.innerHTML = `
     <p><strong>Barnes-Wall BW₃₂</strong> is a 32-dimensional lattice used for error correction
@@ -33,9 +33,9 @@ export function renderExhibit3(container: HTMLElement): void {
     <div class="btn-group">
       <label class="inline-label">
         Noise σ:
-        <input type="range" id="bw32-noise-slider" min="0" max="8000" value="500" step="100"
+        <input type="range" id="bw32-noise-slider" min="0" max="1400" value="200" step="25"
                class="noise-slider" aria-label="Noise standard deviation">
-        <span id="bw32-noise-val">500</span>
+        <span id="bw32-noise-val">200</span>
       </label>
       <button class="btn" id="bw32-decode-btn">Encode + Add Noise + Decode</button>
     </div>

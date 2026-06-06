@@ -61,7 +61,7 @@ function buildLWEDisplay(demo: ToyLWEDemo): string {
 
   // Error e
   html += `<div style="margin-bottom:1rem">
-    <span class="result-label">Error e (Gaussian, small):</span>
+    <span class="result-label">Error e (centered binomial, small):</span>
     <div class="vector-display" role="list" aria-label="Error vector e">`;
   for (let i = 0; i < n; i++) {
     const cls = e[i] > 0 ? 'pos' : e[i] < 0 ? 'neg' : 'zero';

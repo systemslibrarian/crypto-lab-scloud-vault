@@ -82,11 +82,14 @@ function renderKeyGenResult(
       <div class="result-row"><span class="result-label">sk size:</span> <span class="result-value">${skSize} bytes</span></div>
       <div class="result-row"><span class="result-label">Time:</span> <span class="result-value">${ms.toFixed(0)} ms</span></div>
     </div>
-    <div class="result-box" style="margin-top:0.5rem">
-      <div class="result-row" style="color:var(--text-muted)">
-        <!-- ePrint 2024/1306 Table 4 expected sizes -->
-        <span class="result-label">Expected pk size (spec):</span> ${params.pkBytes} bytes — TODO: verify against ePrint 2024/1306 Table 4
-      </div>
+    <div class="callout">
+      <span class="callout-title">Demo size vs official size</span>
+      This demo's public key is <strong>${pkBytes.length} bytes</strong>; the real ${params.name}
+      public key is <strong>${params.specPkBytes.toLocaleString()} bytes</strong> (paper Table 6).
+      The difference is expected: the real scheme stores <code>B</code> as a full
+      ${params.specMN[0]}×n̄ matrix, while this demo uses a single-vector simplification so the
+      computation stays fast and the vectors stay readable. The algorithm and security ideas are the
+      same — only the structure is scaled down.
     </div>
   `;
 }

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>S-Cloud+ Vault — Lattice KEM Explorer</title>
-  <meta name="description" content="Interactive browser-based demo of S-Cloud+ KEM (ePrint 2024/1306) with BW₃₂ lattice coding, ternary secrets, and full encapsulation/decapsulation.">
+  <title>Scloud+ Explorer — Post-Quantum Lattice KEM, Explained</title>
+  <meta name="description" content="Interactive, beginner-friendly browser demo of the Scloud+ post-quantum KEM (ePrint 2024/1306): unstructured LWE, ternary secrets, BW₃₂ lattice coding, a real Fujisaki-Okamoto transform, and honest comparisons to ML-KEM and FrodoKEM.">
 
   <!-- Anti-flash: read theme from localStorage BEFORE any paint -->
   <script>
@@ -178,69 +178,36 @@
 
   <main class="container" id="main-content">
     <div class="intro">
-      <h2>S-Cloud+ Vault Explorer</h2>
-      <p>Interactive demonstration of the S-Cloud+ Vault — a secure container for encrypted payloads using lattice-based Key Encapsulation (ePrint 2024/1306, Wang et al. — Tsinghua University / Huawei).
-         Featuring BW₃₂ Barnes-Wall lattice coding, ternary secrets, and FO-transformed IND-CCA2 security.</p>
+      <h2>Scloud+ Explorer</h2>
+      <p>An interactive, in-browser tour of <strong>Scloud+</strong> — a post-quantum Key
+         Encapsulation Mechanism from China (ePrint 2024/1306, Wang et al., Tsinghua / Huawei / PBC).
+         It runs <em>real</em> key generation, encapsulation and decapsulation on unstructured LWE,
+         with ternary secrets, BW₃₂ Barnes-Wall lattice coding, and a genuine Fujisaki-Okamoto
+         transform — then compares it to ML-KEM and FrodoKEM.</p>
     </div>
 
-    <!-- Reality Check Panel -->
-    <section class="reality-check-panel">
-      <h3>Reality Check</h3>
-      <div class="reality-cols">
-        <div class="reality-col">
-          <h4>What this project demonstrates</h4>
-          <ul>
-            <li>Client-side encryption model</li>
-            <li>Secure container concept</li>
-            <li>Key derivation → encryption flow</li>
-          </ul>
-        </div>
-        <div class="reality-col">
-          <h4>What this project simplifies</h4>
-          <ul>
-            <li>No secure enclave / HSM</li>
-            <li>No hardened authentication layer</li>
-            <li>No malicious client defense</li>
-          </ul>
-        </div>
-        <div class="reality-col">
-          <h4>What this project is NOT</h4>
-          <ul>
-            <li>Not production-ready secure storage</li>
-            <li>Not resistant to XSS or compromised browser</li>
-            <li>Not a substitute for audited systems</li>
-          </ul>
-        </div>
-      </div>
+    <!-- Start here -->
+    <section class="start-here">
+      <h3>New here? Here's the path</h3>
+      <p>The sections are ordered easiest → deepest. You don't need any math background to start.</p>
+      <ol>
+        <li><strong>The Big Picture</strong> — plain-English idea, no math.</li>
+        <li><strong>Guided Walkthrough</strong> — click through one full key exchange step by step.</li>
+        <li><strong>Core exhibits</strong> — LWE, ternary secrets, BW₃₂, keygen, the FO transform.</li>
+        <li><strong>Compare &amp; reflect</strong> — sizes, performance, and how much it's been reviewed.</li>
+      </ol>
     </section>
 
-    <!-- Security Model Panel -->
-    <section class="security-model-panel">
-      <h3>Security Model</h3>
-      <ul>
-        <li><strong>Encryption algorithm:</strong> AES-256-GCM (or as implemented in S-Cloud+)</li>
-        <li><strong>Key derivation:</strong> Argon2id (or as implemented in S-Cloud+)</li>
-        <li><strong>Key location:</strong> Client-side only; never leaves the device</li>
-        <li><strong>Remote storage:</strong> Only ciphertext is intended to be stored remotely</li>
-      </ul>
-      <div class="threat-cols">
-        <div class="threat-col">
-          <h4>Threats Considered</h4>
-          <ul>
-            <li>Data-at-rest exposure</li>
-            <li>Network interception</li>
-          </ul>
-        </div>
-        <div class="threat-col">
-          <h4>Threats NOT Covered</h4>
-          <ul>
-            <li>Malicious browser environment</li>
-            <li>Keylogging</li>
-            <li>XSS / injected scripts</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <!-- Table of contents -->
+    <nav class="toc" aria-label="Sections">
+      <h3>Contents</h3>
+      <div id="toc-grid" class="toc-grid"></div>
+    </nav>
+
+    <div class="expand-controls">
+      <button class="btn btn-secondary" id="expand-all">Expand all</button>
+      <button class="btn btn-secondary" id="collapse-all">Collapse all</button>
+    </div>
 
     <div id="exhibits"></div>
 
@@ -251,10 +218,10 @@
         <div class="reality-col">
           <h4>What This Demo <em>Is</em></h4>
           <ul>
-            <li>A faithful TypeScript port of ePrint 2024/1306 parameters and algorithms</li>
-            <li>Real SHAKE-128/256 and SHA3-256 running in your browser (pure Keccak)</li>
-            <li>Full KEM round-trip: KeyGen → Encaps → Decaps with implicit rejection</li>
-            <li>BW₃₂ lattice coding with measurable error-correction radius</li>
+            <li>A faithful-but-simplified TypeScript implementation of the ePrint 2024/1306 ideas</li>
+            <li>Real SHAKE-256, SHA3-256 and SHA3-512 running in your browser (pure Keccak)</li>
+            <li>A genuine KEM round-trip: KeyGen → Encaps → Decaps with a real FO re-encryption check and implicit rejection</li>
+            <li>BW₃₂-style lattice coding with measurable error-correction radius</li>
           </ul>
         </div>
         <div class="reality-col">

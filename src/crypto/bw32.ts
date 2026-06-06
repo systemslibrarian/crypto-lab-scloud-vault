@@ -85,14 +85,14 @@ export function bw32Encode(bits: number, q: number): Int32Array {
  * 1. Centers the received vector around 0 (subtract q/4)
  * 2. Applies FWHT to compute correlations with all 32 codewords
  * 3. Finds the index of the maximum absolute correlation
- * 4. The sign determines one bit, the index determines the other 4
+ * 4. The argmax index IS the 5-bit message (the encoder emits row `m` of the
+ *    Sylvester-Hadamard matrix, so the transform peaks at index `m`).
  *
  * @param received 32-dimensional noisy vector in Z_q
  * @param q Modulus
  * @returns Decoded 5-bit value (0-31)
  */
 export function bw32Decode(received: Int32Array, q: number): number {
-  const scale = Math.floor(q / 4);
   const halfQ = Math.floor(q / 2);
 
   // Step 1: Center and convert to signed representation
@@ -109,10 +109,11 @@ export function bw32Decode(received: Int32Array, q: number): number {
   const transform = new Float64Array(centered);
   fwht(transform);
 
-  // Step 3: Find maximum absolute correlation
+  // Step 3: Find maximum absolute correlation. Our encoder always emits +row(m)
+  // (never a globally negated codeword), so the peak is positive; using |·|
+  // keeps the soft-decision decoder robust to large noise excursions.
   let bestIdx = 0;
   let bestVal = -Infinity;
-
   for (let i = 0; i < BW_DIM; i++) {
     const absVal = Math.abs(transform[i]);
     if (absVal > bestVal) {
@@ -121,18 +122,8 @@ export function bw32Decode(received: Int32Array, q: number): number {
     }
   }
 
-  // Step 4: Extract 5-bit message
-  // The index gives bits 1-4, the sign gives bit 0
-  // If correlation is positive → encoded value was +scale → bit pattern with even parity
-  // If negative → encoded value was -scale → bit 0 flips
-  const sign = transform[bestIdx] < 0 ? 1 : 0;
-
-  // Reconstruct: bestIdx corresponds to which Hadamard row matched
-  // The message bits that produced this index: bit 0 = sign, bits 1-4 = bestIdx bits
-  const decoded = (sign << 0) | ((bestIdx & 1) << 1) | (((bestIdx >> 1) & 1) << 2) |
-    (((bestIdx >> 2) & 1) << 3) | (((bestIdx >> 3) & 1) << 4);
-
-  return decoded & 0x1F;
+  // Step 4: the winning index is exactly the 5-bit message.
+  return bestIdx & 0x1f;
 }
 
 /**

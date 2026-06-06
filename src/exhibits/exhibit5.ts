@@ -1,18 +1,20 @@
 /**
- * Exhibit 5: Encapsulation + Decapsulation + Tamper Detection
- * Full encap/decap round-trip with tamper demonstration.
+ * Exhibit: Encapsulation + Decapsulation + the FO transform
+ * Full encaps/decaps round-trip with a REAL Fujisaki-Okamoto re-encryption
+ * check, visualized, plus a tamper demonstration showing implicit rejection.
  */
 
-import { fullRoundtrip, serializeCiphertext, serializePublicKey, KEMRoundtripResult } from '../crypto/kem';
+import { fullRoundtrip, KEMRoundtripResult } from '../crypto/kem';
 import { ALL_PARAMS, getParams, SCloudParams } from '../crypto/params';
-import { bytesToHex, packIntegers } from '../crypto/utils';
+import { bytesToHex } from '../crypto/utils';
 
 export function renderExhibit5(container: HTMLElement): void {
   container.innerHTML = `
-    <p>Full encapsulation/decapsulation round-trip with real parameters.
-       The Fujisaki-Okamoto transform ensures <strong>IND-CCA2</strong> security:
-       tampered ciphertexts produce a <em>different</em> shared secret (implicit rejection),
-       not an error — this is the correct security behavior.</p>
+    <p>The full round-trip with real parameters. Scloud+ wraps an IND-CPA encryption scheme in the
+       <strong>Fujisaki-Okamoto transform</strong> to get IND-CCA2 security. The key mechanism:
+       on decapsulation the receiver <strong>re-encrypts</strong> the recovered message and checks it
+       reproduces the ciphertext. If not, it returns a pseudo-random key (<em>implicit rejection</em>) —
+       never an error.</p>
     <div class="btn-group">
       <select id="encaps-param-select" class="param-select">
         ${ALL_PARAMS.map(p => `<option value="${p.securityLevel}">${p.name}</option>`).join('')}
@@ -20,7 +22,6 @@ export function renderExhibit5(container: HTMLElement): void {
       <button class="btn" id="encaps-run">▶ Run Encaps + Decaps</button>
       <button class="btn btn-danger" id="encaps-tamper">🔓 Tamper + Detect</button>
     </div>
-    <div class="micro-hint">Encrypted payload is what would be stored remotely. Losing your password results in permanent data loss.</div>
     <div id="encaps-output"></div>
   `;
 
@@ -32,14 +33,11 @@ export function renderExhibit5(container: HTMLElement): void {
   function run(tamper: boolean): void {
     const level = parseInt(select.value) as 128 | 192 | 256;
     const params = getParams(level);
-
     output.innerHTML = `<div class="computing">⏳ Running ${tamper ? 'tamper test' : 'encaps + decaps'} for ${params.name}…</div>`;
-
     setTimeout(() => {
       const t0 = performance.now();
       const result = fullRoundtrip(params, tamper);
       const t1 = performance.now();
-
       output.innerHTML = renderResult(result, params, t1 - t0, tamper);
     }, 50);
   }
@@ -54,39 +52,52 @@ function renderResult(r: KEMRoundtripResult, params: SCloudParams, ms: number, s
   const matchCls = r.match ? 'success' : 'danger';
 
   let html = `<div class="result-box fade-in">`;
-  html += `<div class="result-row"><span class="result-label">Parameter set:</span> <span class="result-value">${params.name}</span></div>`;
-  html += `<div class="result-row"><span class="result-label">seed_A:</span> <span class="result-value">${r.seedA.substring(0, 32)}…</span></div>`;
-  html += `<div class="result-row"><span class="result-label">pk size:</span> <span class="result-value">${r.pkSize} bytes</span></div>`;
-  html += `<div class="result-row"><span class="result-label">sk size:</span> <span class="result-value">${r.skSize} bytes</span></div>`;
-  html += `<div class="result-row"><span class="result-label">ct size:</span> <span class="result-value">${r.ctSize} bytes</span></div>`;
-
+  html += row('Parameter set', params.name);
+  html += row('seed_A', r.seedA.substring(0, 32) + '…');
+  html += row('Demo pk size', `${r.pkSize} bytes`);
+  html += row('Demo ct size', `${r.ctSize} bytes`);
+  html += `<div class="result-row src">(demo sizes — the official spec sizes are pk ${params.specPkBytes} / ct ${params.specCtBytes} bytes; see the comparison exhibit for why they differ)</div>`;
   html += `<hr style="border-color:var(--border);margin:0.5rem 0">`;
-  html += `<div class="result-row"><span class="result-label">c1 dimension:</span> <span class="result-value">${params.n}</span></div>`;
-  html += `<div class="result-row"><span class="result-label">c2 dimension:</span> <span class="result-value">${params.msgBlocks * 32}</span> (${params.msgBlocks} BW₃₂ blocks × 32)</div>`;
-
-  html += `<hr style="border-color:var(--border);margin:0.5rem 0">`;
-  html += `<div class="result-row"><span class="result-label">SS (encaps):</span> <span class="result-value">${ssEncHex}</span></div>`;
+  html += row('SS (encaps)', ssEncHex);
   html += `<div class="result-row"><span class="result-label">SS (decaps):</span> <span class="result-value ${matchCls}">${ssDecHex}</span></div>`;
-  html += `<div class="result-row"><span class="result-label">Match:</span> <span class="${matchCls}">${r.match ? '✓ Shared secrets match!' : '✗ Mismatch'}</span></div>`;
-  html += `<div class="result-row"><span class="result-label">Time:</span> <span class="result-value">${ms.toFixed(0)} ms</span></div>`;
+  html += `<div class="result-row"><span class="result-label">Match:</span> <span class="${matchCls}">${r.match ? '✓ Shared secrets match' : '✗ Mismatch'}</span></div>`;
+  html += row('Time', `${ms.toFixed(0)} ms`);
   html += `</div>`;
 
-  if (showTamper && r.ssTampered) {
-    const ssTampHex = bytesToHex(r.ssTampered);
-    const tamperMatch = r.tamperMatch;
+  // FO re-encryption check (honest path)
+  html += `<div class="callout ${r.decaps.reEncMatch ? 'good' : 'warn'}">
+    <span class="callout-title">FO re-encryption check (honest ciphertext)</span>
+    The receiver decrypted m′, re-encrypted it, and compared to the received ciphertext:
+    <strong>${r.decaps.reEncMatch ? 'C′ == C → accept, ss = K(k′ ‖ C)' : 'C′ != C → would reject'}</strong>.
+  </div>`;
 
+  if (showTamper && r.ssTampered && r.tamperDecaps) {
+    const ssTampHex = bytesToHex(r.ssTampered);
     html += `<div class="result-box fade-in" style="margin-top:0.5rem; border-color:var(--danger)">`;
     html += `<div class="result-row" style="color:var(--danger);font-weight:700">⚠ TAMPER DETECTION</div>`;
-    html += `<div class="result-row"><span class="result-label">Original SS:</span> <span class="result-value">${ssEncHex.substring(0, 32)}…</span></div>`;
-    html += `<div class="result-row"><span class="result-label">Tampered SS:</span> <span class="result-value danger">${ssTampHex.substring(0, 32)}…</span></div>`;
-    html += `<div class="result-row"><span class="result-label">Same?</span> <span class="${tamperMatch ? 'danger' : 'success'}">${tamperMatch ? '✗ Should differ!' : '✓ Different — implicit rejection working correctly'}</span></div>`;
-    html += `<div class="result-row" style="color:var(--text-muted);margin-top:0.5rem">
-      This is the correct IND-CCA2 behavior: the decapsulator detects the tampered ciphertext
-      and returns a pseudorandom shared secret derived from the rejection seed, not an error.
-      The attacker cannot distinguish this from a legitimate shared secret.
+    html += `<div class="fo-check">
+      <div class="fo-box"><span class="lab">Original shared secret</span>${ssEncHex.substring(0, 48)}…</div>
+      <div class="fo-eq nomatch">≠</div>
+      <div class="fo-box"><span class="lab">From tampered ciphertext</span>${ssTampHex.substring(0, 48)}…</div>
     </div>`;
+    html += `<div class="result-row"><span class="result-label">Re-encryption matched?</span>
+      <span class="${r.tamperDecaps.reEncMatch ? 'danger' : 'success'}">${r.tamperDecaps.reEncMatch ? 'yes (unexpected)' : 'NO → implicit rejection'}</span></div>`;
+    html += `<div class="result-row"><span class="result-label">Result differs?</span>
+      <span class="${r.tamperMatch ? 'danger' : 'success'}">${r.tamperMatch ? '✗ should differ!' : '✓ different — rejection working'}</span></div>`;
     html += `</div>`;
+    html += `<div class="callout good"><span class="callout-title">Correct IND-CCA2 behavior</span>
+      The tampered ciphertext failed the re-encryption check, so decapsulation returned
+      <code>K(z ‖ C)</code> — a pseudo-random key derived from the secret rejection seed
+      <code>z</code>. The attacker gets a useless key and <em>no error signal</em> to learn from.</div>`;
+  } else if (!showTamper) {
+    html += `<div class="callout"><span class="callout-title">Try it</span>
+      Hit <strong>🔓 Tamper + Detect</strong> to flip a few ciphertext bytes and watch the FO
+      transform reject it via implicit rejection.</div>`;
   }
 
   return html;
+}
+
+function row(label: string, value: string): string {
+  return `<div class="result-row"><span class="result-label">${label}:</span> <span class="result-value">${value}</span></div>`;
 }
