@@ -36,6 +36,8 @@ const CRYPTANALYSIS_STATE: Ref[] = [
   { authors: 'Ducas, Pulles', year: '2023', title: 'Does the Dual-Sieve Attack on Learning with Errors even Work?', venue: 'CRYPTO 2023 · ePrint 2023/302', url: 'https://eprint.iacr.org/2023/302' },
   { authors: 'Ducas, Pulles', year: '2023', title: 'Accurate Score Prediction for Dual-Sieve Attacks', venue: 'IACR ePrint 2023/1850', url: 'https://eprint.iacr.org/2023/1850' },
   { authors: 'May', year: '2021', title: 'How to Meet Ternary LWE Keys (hybrid / meet-in-the-middle on ternary secrets)', venue: 'CRYPTO 2021', url: 'https://eprint.iacr.org/2021/216' },
+  { authors: 'Albrecht, Ducas', year: '2021', title: 'Lattice Attacks on NTRU and LWE: A History of Refinements', venue: 'survey · ePrint 2021/799', url: 'https://eprint.iacr.org/2021/799' },
+  { authors: 'Ducas, van Woerden', year: '2021', title: 'NTRU Fatigue: How Stretched is Overstretched? (when a STRUCTURED scheme weakens)', venue: 'ASIACRYPT 2021 · ePrint 2021/999', url: 'https://eprint.iacr.org/2021/999' },
   { authors: 'Ducas, Pulles, Stevens', year: '2025', title: 'Towards a Modern LLL Implementation (BLASter)', venue: 'IACR ePrint 2025/774', url: 'https://eprint.iacr.org/2025/774' },
 ];
 

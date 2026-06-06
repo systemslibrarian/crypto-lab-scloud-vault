@@ -68,6 +68,16 @@ export function renderWhyUnstructured(container: HTMLElement): void {
       </div>
     </div>
 
+    <div class="callout">
+      <span class="callout-title">A concrete historical example (it cuts both ways)</span>
+      <strong>Overstretched NTRU.</strong> NTRU is a structured scheme. For a range of large moduli —
+      the "overstretched" regime — researchers found its security drops sharply (Albrecht–Bai–Ducas
+      2016; Kirchner–Fouque 2017), and Ducas–van Woerden (2021) pinned down the exact "fatigue point."
+      <em>For caution:</em> structure really can hide regime-specific weaknesses. <em>For calm:</em>
+      open analysis precisely characterized the boundary, and standard NTRU / ML-KEM don't sit in that
+      dangerous regime. Same facts, two honest readings.
+    </div>
+
     <div class="callout why">
       <span class="callout-title">So who's right?</span>
       Both bets are defensible — they price <em>risk</em> and <em>time horizon</em> differently.
@@ -103,8 +113,9 @@ export function renderWhyUnstructured(container: HTMLElement): void {
       Concrete "bits of security" are <em>estimates</em>, not facts — and the estimates move. Claimed
       improvements to the dual attack against NIST candidates (Guo–Johansson 2021; MATZOV 2022) were
       later shown by Ducas–Pulles (CRYPTO 2023) to rest on an "Independence Heuristic" that gives
-      <em>wrong</em> predictions, and lattice-reduction tooling keeps getting faster (e.g. flatter
-      2023, BLASter 2025). The honest takeaway applies to <strong>every</strong> lattice scheme,
+      <em>wrong</em> predictions, lattice attacks have been refined continuously for ~40 years
+      (Albrecht–Ducas survey, 2021), and reduction tooling keeps getting faster (flatter 2023, BLASter
+      2025). The honest takeaway applies to <strong>every</strong> lattice scheme,
       ML-KEM included: published security levels carry genuine uncertainty, which is why margins and
       ongoing scrutiny matter for all of them.
     </div>
