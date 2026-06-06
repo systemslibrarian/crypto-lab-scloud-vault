@@ -260,6 +260,47 @@ export function keyGen(params: SCloudParams): SCloudKeyPair {
   return { pk, sk: { S, pk, hPk, z } };
 }
 
+/**
+ * Same as keyGen, but yields to the UI between real algorithm steps so a
+ * staged progress indicator can paint. `onStage` is awaited before each step.
+ */
+export async function keyGenStaged(
+  params: SCloudParams,
+  onStage: (id: string) => Promise<void>,
+): Promise<SCloudKeyPair> {
+  const { n, q } = params;
+
+  await onStage('A');
+  const seedA = randomBytes(params.seedBytes);
+  const A = generateMatrixA(seedA, params);
+
+  await onStage('S');
+  const S = new Int16Array(n * NBAR);
+  for (let k = 0; k < NBAR; k++) {
+    const col = sampleTernarySecret(n, params.hw);
+    for (let j = 0; j < n; j++) S[j * NBAR + k] = col[j];
+  }
+
+  await onStage('E');
+  const E = sampleCenteredBinomial(n * NBAR, params.eta);
+
+  await onStage('B');
+  const B = new Int32Array(n * NBAR);
+  for (let j = 0; j < n; j++) {
+    for (let k = 0; k < NBAR; k++) {
+      let acc = 0;
+      for (let t = 0; t < n; t++) acc += A[j][t] * S[t * NBAR + k];
+      B[j * NBAR + k] = mod(acc + E[j * NBAR + k], q);
+    }
+  }
+
+  await onStage('H');
+  const pk: SCloudPublicKey = { seedA, B };
+  const hPk = H(pk, params);
+  const z = randomBytes(32);
+  return { pk, sk: { S, pk, hPk, z } };
+}
+
 /** Scloud+.KEM.Encaps — Algorithm 10. */
 export function encaps(pk: SCloudPublicKey, params: SCloudParams): SCloudEncapsResult {
   const r = encapsDetailed(pk, params);

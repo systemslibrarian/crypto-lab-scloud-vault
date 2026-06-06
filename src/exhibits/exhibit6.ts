@@ -14,6 +14,12 @@ export function renderExhibit6(container: HTMLElement): void {
        keeps the unstructured foundation but adds ternary secrets + BW₃₂ coding to land much closer
        to practical.</p>
 
+    <div class="summary-chips">
+      <div class="summary-chip"><div class="name mlkem">ML-KEM</div><div class="desc">Smallest &amp; fastest. Structured. The NIST standard.</div></div>
+      <div class="summary-chip"><div class="name scloud">Scloud+</div><div class="desc">Middle ground: unstructured but far smaller than Frodo.</div></div>
+      <div class="summary-chip"><div class="name frodo">FrodoKEM</div><div class="desc">Most conservative. Unstructured. Largest &amp; slowest.</div></div>
+    </div>
+
     <div class="btn-group">
       <label class="inline-label">Security level:
         <select id="cmp-level" class="param-select">
@@ -80,6 +86,14 @@ export function renderExhibit6(container: HTMLElement): void {
         <div class="node"><span class="answer">→ FrodoKEM</span> — plain LWE, no structure, ~10–21 KB keys.</div></div>
       <div class="node"><div class="question">Want unstructured LWE but smaller than FrodoKEM?</div>
         <div class="node"><span class="answer">→ Scloud+</span> — BW₃₂ + ternary secrets shrink the unstructured approach. Newer, less reviewed (see Transparency &amp; Review).</div></div>
+    </div>
+
+    <h4 style="margin-top:1.5rem">When would you actually pick each?</h4>
+    <div class="scenario-guide">
+      <div class="scenario"><span class="pick mlkem">ML-KEM</span><span class="case">A TLS server, phone, or smart card today — you need a standard, small keys, and high speed, and you trust the years of public review.</span></div>
+      <div class="scenario"><span class="pick scloud">Scloud+</span><span class="case">You want the conservative unstructured assumption but FrodoKEM's ~10–21 KB keys are too big for your bandwidth/storage — and you can accept a newer, less-reviewed scheme (ideally in a hybrid).</span></div>
+      <div class="scenario"><span class="pick frodo">FrodoKEM</span><span class="case">Long-term/state-secret confidentiality where maximum conservatism matters more than size or speed, and you want the most-studied unstructured option.</span></div>
+      <div class="scenario"><span class="pick scloud">Hybrid</span><span class="case">Highest assurance: run a structured scheme <em>and</em> an unstructured one together (e.g. ECDHE + Scloud+, as the IETF draft proposes) so a break in either alone isn't fatal.</span></div>
     </div>
   `;
 

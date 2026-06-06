@@ -1,5 +1,7 @@
 import './style.css';
 import { initTheme } from './theme';
+import { initGlossary } from './glossary';
+import { initNav } from './nav';
 import { renderBigPicture } from './exhibits/bigPicture';
 import { renderGuidedWalkthrough } from './exhibits/guidedWalkthrough';
 import { renderExhibit1 } from './exhibits/exhibit1';
@@ -114,6 +116,10 @@ function setAll(open: boolean): void {
 }
 document.getElementById('expand-all')?.addEventListener('click', () => setAll(true));
 document.getElementById('collapse-all')?.addEventListener('click', () => setAll(false));
+
+// ── Educational aids: glossary tooltips + navigation (scroll-spy, progress) ──
+initGlossary();
+initNav();
 
 // keep slug helper referenced (anchors are numeric; slug kept for future use)
 void slug;

@@ -901,3 +901,148 @@ code, pre {
 .fo-eq { font-size: 1.4rem; font-weight: 700; text-align: center; }
 .fo-eq.match { color: var(--success); }
 .fo-eq.nomatch { color: var(--danger); }
+
+/* ═══════════════════════════════════════════════════
+   Educational aids: glossary tooltips + navigation
+   (theme-colored — uses existing CSS variables only)
+   ═══════════════════════════════════════════════════ */
+
+/* ── Glossary term + tooltip ──────────────────────── */
+.term {
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+  color: inherit;
+}
+.term:hover, .term:focus-visible { color: var(--accent); }
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+.glossary-tip {
+  position: fixed;
+  z-index: 300;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+.glossary-tip.visible { opacity: 1; }
+.glossary-tip strong {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 0.2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+}
+
+/* ── Reading-progress bar ─────────────────────────── */
+#reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--accent);
+  z-index: 250;
+  transition: width 0.08s linear;
+}
+
+/* ── Back to top ──────────────────────────────────── */
+#back-to-top {
+  position: fixed;
+  right: 18px; bottom: 18px;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--accent);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 240;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+#back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+#back-to-top:hover { background: var(--bg-card-alt); border-color: var(--accent); }
+
+/* ── TOC scroll-spy active state ──────────────────── */
+.toc-link.active {
+  background: var(--bg-card-alt);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.toc-link.active span:not(.toc-num):not(.toc-badge) { color: var(--accent); }
+
+/* ── P3: comparison summary chips + scenarios ─────── */
+.summary-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.5rem 0 1rem; }
+.summary-chip {
+  flex: 1 1 180px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-code);
+  padding: 0.7rem 0.9rem;
+}
+.summary-chip .name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.15rem; }
+.summary-chip .name.scloud { color: var(--accent); }
+.summary-chip .name.frodo { color: #8957e5; }
+.summary-chip .name.mlkem { color: var(--success); }
+.summary-chip .desc { font-size: 0.8rem; color: var(--text-muted); }
+
+.scenario-guide { margin: 1.25rem 0 0.5rem; }
+.scenario {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem 0.9rem;
+  align-items: start;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.scenario:last-child { border-bottom: none; }
+.scenario .pick {
+  font-weight: 700; font-size: 0.82rem; white-space: nowrap;
+  padding: 2px 10px; border-radius: 12px; background: var(--bg-card-alt);
+}
+.scenario .pick.scloud { color: var(--accent); }
+.scenario .pick.frodo { color: #8957e5; }
+.scenario .pick.mlkem { color: var(--success); }
+.scenario .case { font-size: 0.88rem; color: var(--text-muted); }
+
+/* ── P4: FO accept/reject branch + staged feedback ── */
+.fo-branch { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
+@media (max-width: 640px) { .fo-branch { grid-template-columns: 1fr; } }
+.fo-branch-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-code);
+  padding: 0.9rem 1rem;
+}
+.fo-branch-card.accept { border-left: 4px solid var(--success); }
+.fo-branch-card.reject { border-left: 4px solid var(--danger); }
+.fo-branch-card h5 { font-size: 0.85rem; margin-bottom: 0.4rem; }
+.fo-branch-card.accept h5 { color: var(--success); }
+.fo-branch-card.reject h5 { color: var(--danger); }
+.fo-branch-card .mono { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text); word-break: break-all; }
+.fo-branch-card .note { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; }
+.fo-branch-card.dim { opacity: 0.45; }
+
+.stage-list { list-style: none; margin: 0.75rem 0; padding: 0; }
+.stage-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-family: var(--font-mono); font-size: 0.82rem;
+  color: var(--text-muted); padding: 0.2rem 0;
+}
+.stage-item .dot {
+  width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--border); display: inline-flex;
+  align-items: center; justify-content: center; font-size: 0.6rem;
+}
+.stage-item.active { color: var(--text); }
+.stage-item.active .dot { border-color: var(--accent); border-top-color: transparent; animation: spin 0.6s linear infinite; }
+.stage-item.done { color: var(--success); }
+.stage-item.done .dot { border-color: var(--success); background: var(--success); color: #fff; animation: none; }

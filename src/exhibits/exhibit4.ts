@@ -3,9 +3,10 @@
  * Full Scloud+-128 (default) keygen with real parameters.
  */
 
-import { keyGen, serializePublicKey } from '../crypto/kem';
+import { keyGenStaged, serializePublicKey } from '../crypto/kem';
 import { SCloudParams, ALL_PARAMS, getParams } from '../crypto/params';
 import { bytesToHex, packIntegers } from '../crypto/utils';
+import { mountStages } from '../stages';
 
 export function renderExhibit4(container: HTMLElement): void {
   container.innerHTML = `
@@ -26,24 +27,34 @@ export function renderExhibit4(container: HTMLElement): void {
   const runBtn = container.querySelector('#keygen-run') as HTMLButtonElement;
   const output = container.querySelector('#keygen-output') as HTMLElement;
 
-  runBtn.addEventListener('click', () => {
+  runBtn.addEventListener('click', async () => {
     const level = parseInt(select.value) as 128 | 192 | 256;
     const params = getParams(level);
 
-    output.innerHTML = `<div class="computing">⏳ Generating keys for ${params.name} (n=${params.n})…</div>`;
+    runBtn.disabled = true;
+    output.innerHTML = `<div id="kg-stages"></div><div id="kg-result"></div>`;
+    const stagesEl = output.querySelector('#kg-stages') as HTMLElement;
+    const resultEl = output.querySelector('#kg-result') as HTMLElement;
 
-    // Use setTimeout to allow UI to update
-    setTimeout(() => {
-      const t0 = performance.now();
-      const { pk, sk } = keyGen(params);
-      const t1 = performance.now();
+    const ctrl = mountStages(stagesEl, [
+      { id: 'A', label: `Expand seed → public matrix A (${params.n}×${params.n})` },
+      { id: 'S', label: 'Sample ternary secret S (n×32)' },
+      { id: 'E', label: 'Sample error E (centered binomial)' },
+      { id: 'B', label: 'Compute B = A·S + E (mod q)' },
+      { id: 'H', label: 'Hash public key → H(pk)' },
+    ]);
 
-      const pkBytes = serializePublicKey(pk, params);
-      const sPacked = packIntegers(Array.from(sk.S).map(v => v + 1), 2);
-      const skTotalSize = sPacked.length + pkBytes.length + 32 + 32;
+    const t0 = performance.now();
+    const { pk, sk } = await keyGenStaged(params, id => ctrl.active(id));
+    ctrl.finish();
+    const t1 = performance.now();
 
-      output.innerHTML = renderKeyGenResult(params, pk, sk, pkBytes, skTotalSize, t1 - t0);
-    }, 50);
+    const pkBytes = serializePublicKey(pk, params);
+    const sPacked = packIntegers(Array.from(sk.S).map(v => v + 1), 2);
+    const skTotalSize = sPacked.length + pkBytes.length + 32 + 32;
+
+    resultEl.innerHTML = renderKeyGenResult(params, pk, sk, pkBytes, skTotalSize, t1 - t0);
+    runBtn.disabled = false;
   });
 }
 
