@@ -21,7 +21,7 @@ export function renderExhibit5(container: HTMLElement): void {
        reproduces the ciphertext. If not, it returns a pseudo-random key (<em>implicit rejection</em>) —
        never an error.</p>
     <div class="btn-group">
-      <select id="encaps-param-select" class="param-select">
+      <select id="encaps-param-select" class="param-select" aria-label="Parameter set for encapsulation">
         ${ALL_PARAMS.map(p => `<option value="${p.securityLevel}">${p.name}</option>`).join('')}
       </select>
       <button class="btn" id="encaps-run">▶ Run Encaps + Decaps</button>

@@ -16,7 +16,7 @@ export function renderBenchmark(container: HTMLElement): void {
 
     <h4>Live benchmark (this demo, in your browser)</h4>
     <div class="btn-group">
-      <select id="bm-level" class="param-select">
+      <select id="bm-level" class="param-select" aria-label="Parameter set for benchmark">
         ${ALL_PARAMS.map(p => `<option value="${p.securityLevel}">${p.name}</option>`).join('')}
       </select>
       <label class="inline-label">Iterations:

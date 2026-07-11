@@ -23,6 +23,7 @@
 
 /* ── Dark Theme (default) ───────────── */
 [data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0d1117;
   --bg-card: #161b22;
   --bg-card-alt: #1c2333;
@@ -40,10 +41,24 @@
   --zero: #484f58;
   --header-bg: #010409;
   --table-stripe: #1c2128;
+  /* Ink for text sitting ON a bright accent/semantic fill. The dark-theme
+     accents (#58a6ff / #3fb950 / #f85149) are light enough that white text on
+     them is <4.5:1, so use the page's near-black instead. */
+  --on-accent: #0d1117;
+  --on-fill: #0d1117;
+  --danger-hover: #ff6a5f;
+  --frodo: #a371f7;
+  --frodo-strong: #8957e5;
+  /* Text for a semantic word sitting on its own faint tinted pill/badge. In
+     dark the bright hue already clears AA on the near-black tint. */
+  --badge-success-text: #3fb950;
+  --badge-accent-text: #58a6ff;
+  --warn-text: #d29922;
 }
 
 /* ── Light Theme ────────────────────── */
 [data-theme="light"] {
+  color-scheme: light;
   --bg: #ffffff;
   --bg-card: #f6f8fa;
   --bg-card-alt: #eef1f5;
@@ -61,6 +76,21 @@
   --zero: #afb8c1;
   --header-bg: #f6f8fa;
   --table-stripe: #f6f8fa;
+  /* Light-theme accents (#0969da / #1a7f37 / #cf222e) are dark enough that
+     white text on them clears 4.5:1. */
+  --on-accent: #ffffff;
+  --on-fill: #ffffff;
+  --danger-hover: #a40e19;
+  /* On a faint light tint the base hues drop below AA, so darken the WORD text
+     (the bright hue stays on borders/fills where white sits on top). */
+  --badge-success-text: #116029;
+  --badge-accent-text: #084ba8;
+  --warn-text: #8a5b00;
+  /* Purple brand hue for FrodoKEM: as INLINE TEXT on a light card the base
+     #8957e5 is only 4.1:1, so use a darkened variant; the brighter one is kept
+     for solid fills/borders where white sits on top. */
+  --frodo: #6639ba;
+  --frodo-strong: #8957e5;
 }
 
 /* ── Skip Link ──────────────────────── */
@@ -69,7 +99,7 @@
   top: -100%;
   left: 1rem;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   padding: 0.5rem 1rem;
   border-radius: var(--radius);
   z-index: 200;
@@ -83,11 +113,12 @@
 /* ── Base ───────────────────────────── */
 html {
   scroll-behavior: smooth;
+  background-color: var(--bg);
 }
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
@@ -108,10 +139,15 @@ code, pre {
 }
 
 .param-select {
-  background: var(--bg-card);
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--bg-card);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%238b949e' stroke-width='1.5' d='M2.5 4.5L6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 0.4rem 0.8rem;
+  padding: 0.4rem 2rem 0.4rem 0.8rem;
   color: var(--text);
   font-size: 0.9rem;
   cursor: pointer;
@@ -216,7 +252,7 @@ code, pre {
 
 .exhibit-number {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -243,7 +279,7 @@ code, pre {
   align-items: center;
   gap: 0.4rem;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border: none;
   border-radius: var(--radius);
   padding: 0.5rem 1.2rem;
@@ -267,14 +303,14 @@ code, pre {
 }
 .btn-secondary:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .btn-danger {
   background: var(--danger);
 }
 .btn-danger:hover {
-  background: #e5534b;
+  background: var(--danger-hover);
 }
 
 .btn-group {
@@ -324,8 +360,8 @@ code, pre {
   min-width: 30px;
 }
 
-.vec-entry.pos { background: var(--positive); color: #fff; }
-.vec-entry.neg { background: var(--negative); color: #fff; }
+.vec-entry.pos { background: var(--positive); color: var(--on-fill); }
+.vec-entry.neg { background: var(--negative); color: var(--on-fill); }
 .vec-entry.zero { background: var(--zero); color: var(--text); }
 
 /* ── Result Output ──────────────────── */
@@ -744,7 +780,7 @@ code, pre {
 .toc-link:hover { background: var(--bg-card-alt); text-decoration: none; }
 .toc-num {
   flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
-  background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700;
+  background: var(--accent); color: var(--on-accent); font-size: 0.72rem; font-weight: 700;
   display: inline-flex; align-items: center; justify-content: center;
 }
 .toc-badge {
@@ -752,7 +788,7 @@ code, pre {
   padding: 1px 6px; border-radius: 10px; margin-left: auto; flex-shrink: 0;
   background: var(--bg-card-alt); color: var(--text-muted); align-self: center;
 }
-.toc-badge.beginner { background: rgba(63,185,80,0.15); color: var(--success); }
+.toc-badge.beginner { background: rgba(63,185,80,0.15); color: var(--badge-success-text); }
 
 .expand-controls { display: flex; gap: 0.5rem; margin: -0.5rem 0 1.5rem; }
 
@@ -762,8 +798,8 @@ code, pre {
   padding: 2px 8px; border-radius: 10px; font-weight: 700;
   background: var(--bg-code); color: var(--text-muted); margin-left: 0.5rem;
 }
-.level-pill.beginner { background: rgba(63,185,80,0.15); color: var(--success); }
-.level-pill.core { background: rgba(88,166,255,0.15); color: var(--accent); }
+.level-pill.beginner { background: rgba(63,185,80,0.15); color: var(--badge-success-text); }
+.level-pill.core { background: rgba(88,166,255,0.15); color: var(--badge-accent-text); }
 
 /* ── Callouts ─────────────────────────────────────── */
 .callout {
@@ -781,7 +817,7 @@ code, pre {
 .callout.warn { border-left-color: var(--warning); }
 .callout.good { border-left-color: var(--success); }
 .callout-title { display: block; font-weight: 700; margin-bottom: 0.25rem; color: var(--accent); }
-.callout.warn .callout-title { color: var(--warning); }
+.callout.warn .callout-title { color: var(--warn-text); }
 .callout.good .callout-title { color: var(--success); }
 
 /* analogy card */
@@ -812,7 +848,7 @@ code, pre {
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 0.78rem; font-weight: 700;
 }
-.guide-dot.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.guide-dot.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .guide-dot.done { background: rgba(63,185,80,0.2); color: var(--success); border-color: var(--success); }
 .guide-line { flex: 1 1 12px; height: 2px; min-width: 8px; background: var(--border); }
 .guide-line.done { background: var(--success); }
@@ -838,13 +874,21 @@ code, pre {
 .bar-track { background: var(--bg-code); border-radius: 4px; overflow: hidden; height: 22px; position: relative; }
 .bar-fill {
   height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end;
-  padding-right: 8px; color: #fff; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+  padding-right: 8px; color: var(--on-fill); font-size: 0.72rem; font-weight: 700; white-space: nowrap;
   transition: width 0.5s ease-out;
 }
 .bar-fill.scloud { background: var(--accent); }
-.bar-fill.frodo { background: #8957e5; }
+/* The purple fill is mid-tone: neither near-black nor white clears 4.5:1 with
+   the dark-ink default, but white does (4.6:1), so pin white on this fill. */
+.bar-fill.frodo { background: var(--frodo-strong); color: #fff; }
 .bar-fill.mlkem { background: var(--success); }
-.bar-fill.small { justify-content: flex-start; color: var(--text); padding-left: 8px; }
+.bar-fill.small { justify-content: flex-start; padding-left: 8px; }
+/* Value label for a too-short bar: sits on the neutral track, not the fill. */
+.bar-value-out {
+  position: absolute; top: 0; height: 100%; display: flex; align-items: center;
+  font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+  color: var(--text); pointer-events: none;
+}
 
 /* ── Structured vs unstructured lattice viz ───────── */
 .lattice-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.25rem 0; }
@@ -990,8 +1034,8 @@ code, pre {
 }
 .summary-chip .name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.15rem; }
 .summary-chip .name.scloud { color: var(--accent); }
-.summary-chip .name.frodo { color: #8957e5; }
-.summary-chip .name.mlkem { color: var(--success); }
+.summary-chip .name.frodo { color: var(--frodo); }
+.summary-chip .name.mlkem { color: var(--badge-success-text); }
 .summary-chip .desc { font-size: 0.8rem; color: var(--text-muted); }
 
 .scenario-guide { margin: 1.25rem 0 0.5rem; }
@@ -1009,8 +1053,8 @@ code, pre {
   padding: 2px 10px; border-radius: 12px; background: var(--bg-card-alt);
 }
 .scenario .pick.scloud { color: var(--accent); }
-.scenario .pick.frodo { color: #8957e5; }
-.scenario .pick.mlkem { color: var(--success); }
+.scenario .pick.frodo { color: var(--frodo); }
+.scenario .pick.mlkem { color: var(--badge-success-text); }
 .scenario .case { font-size: 0.88rem; color: var(--text-muted); }
 
 /* ── P4: FO accept/reject branch + staged feedback ── */
@@ -1029,7 +1073,22 @@ code, pre {
 .fo-branch-card.reject h5 { color: var(--danger); }
 .fo-branch-card .mono { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text); word-break: break-all; }
 .fo-branch-card .note { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; }
-.fo-branch-card.dim { opacity: 0.45; }
+/* The branch that was NOT taken is de-emphasized. We do this WITHOUT opacity
+   (which would sink its text below the AA contrast threshold) — instead we mute
+   the border/background and let the text keep full, legible contrast. */
+.fo-branch-card.dim {
+  border-style: dashed;
+  filter: saturate(0.55);
+}
+.fo-branch-card.dim::after {
+  content: 'not taken';
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
 
 .stage-list { list-style: none; margin: 0.75rem 0; padding: 0; }
 .stage-item {

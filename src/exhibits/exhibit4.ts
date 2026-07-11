@@ -15,7 +15,7 @@ export function renderExhibit4(container: HTMLElement): void {
        the ternary secret has Hamming weight n/2, and public key
        <code>pk = (seed_A, b = A·s + e mod q)</code>.</p>
     <div class="btn-group">
-      <select id="keygen-param-select" class="param-select">
+      <select id="keygen-param-select" class="param-select" aria-label="Parameter set for key generation">
         ${ALL_PARAMS.map(p => `<option value="${p.securityLevel}">${p.name}</option>`).join('')}
       </select>
       <button class="btn" id="keygen-run">▶ Run KeyGen</button>

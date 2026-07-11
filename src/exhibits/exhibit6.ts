@@ -138,9 +138,16 @@ function barChart(bars: Bar[]): string {
   return bars.map(b => {
     const pct = Math.max(2, (b.val / max) * 100);
     const small = pct < 18;
+    // For a very short bar the value would not fit legibly inside the colored
+    // fill, so render it as a label sitting on the (neutral) track instead —
+    // that keeps its text/background contrast measurable and AA-compliant.
+    const inner = small ? '' : b.val.toLocaleString();
+    const outer = small
+      ? `<span class="bar-value-out" style="left:calc(${pct}% + 6px)">${b.val.toLocaleString()}</span>`
+      : '';
     return `<div class="bar-row">
       <div class="bar-label">${b.name}</div>
-      <div class="bar-track"><div class="bar-fill ${b.cls} ${small ? 'small' : ''}" style="width:${pct}%">${b.val.toLocaleString()}</div></div>
+      <div class="bar-track"><div class="bar-fill ${b.cls} ${small ? 'small' : ''}" style="width:${pct}%">${inner}</div>${outer}</div>
     </div>`;
   }).join('');
 }

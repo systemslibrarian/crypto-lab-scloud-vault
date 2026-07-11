@@ -39,11 +39,11 @@ function buildLWEDisplay(demo: ToyLWEDemo): string {
   // Matrix A
   html += `<div style="margin-bottom:1rem">
     <span class="result-label" id="matrix-a-label">Matrix A (${n}×${n}, mod ${q}):</span>
-    <div class="matrix-scroll" role="grid" aria-labelledby="matrix-a-label">
+    <div class="matrix-scroll" role="region" aria-labelledby="matrix-a-label" tabindex="0">
     <div class="matrix-grid" style="grid-template-columns: repeat(${n}, 1fr)">`;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      html += `<div class="matrix-cell" role="gridcell" aria-label="A[${i}][${j}]=${A[i][j]}">${A[i][j]}</div>`;
+      html += `<div class="matrix-cell" aria-label="A[${i}][${j}]=${A[i][j]}">${A[i][j]}</div>`;
     }
   }
   html += `</div></div></div>`;
