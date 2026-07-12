@@ -29,6 +29,10 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      - name: Crypto unit tests (Vitest)
+        run: npm test
+
       - run: npm run build
 
       - name: Install Playwright browser
