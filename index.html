@@ -269,14 +269,17 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <main class="container" id="main-content">
-    <div class="intro">
-      <h2>Scloud+ Explorer</h2>
-      <p>An interactive, in-browser tour of <strong>Scloud+</strong> — a post-quantum Key
-         Encapsulation Mechanism from China (ePrint 2024/1306, Wang et al., Tsinghua / Huawei / PBC).
-         It runs <em>real</em> key generation, encapsulation and decapsulation on unstructured LWE,
-         with ternary secrets, BW₃₂ Barnes-Wall lattice coding, and a genuine Fujisaki-Okamoto
-         transform — then compares it to ML-KEM and FrodoKEM.</p>
-    </div>
+    <header class="cl-hero">
+      <div class="cl-hero-main">
+        <h1 class="cl-hero-title">Scloud+</h1>
+        <p class="cl-hero-sub">Unstructured-LWE KEM · ePrint 2024/1306 · FO-transformed IND-CCA2</p>
+        <p class="cl-hero-desc">Run a real Scloud+ key exchange in your browser — KeyGen, Encaps and Decaps over unstructured LWE with ternary secrets, BW₃₂ Barnes-Wall lattice coding, and a genuine Fujisaki-Okamoto re-encryption check.</p>
+      </div>
+      <aside class="cl-hero-why" aria-label="Why it matters">
+        <span class="cl-hero-why-label">WHY IT MATTERS</span>
+        <p class="cl-hero-why-text">Quantum computers will break today's key exchange, so KEMs like Scloud+ must survive without relying on the ring structure that could hide a future weakness. Its lattice coding buys smaller keys than FrodoKEM at comparable strength.</p>
+      </aside>
+    </header>
 
     <!-- Start here -->
     <section class="start-here">
