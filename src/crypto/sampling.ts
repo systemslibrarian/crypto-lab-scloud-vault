@@ -11,6 +11,13 @@
  * Error terms are sampled from the CENTERED BINOMIAL distribution ρ(η), the
  * same family Kyber/ML-KEM uses (FrodoKEM, by contrast, uses a rounded
  * Gaussian). A sample is Σ_{i=1}^{η}(x_i − y_i) with x_i, y_i ∈ {0,1} fair
+ * SIDE-CHANNEL NOTE (teaching tool, not production): these samplers are NOT
+ * constant-time. The Fisher-Yates rejection loop branches and iterates a
+ * data-dependent number of times, and the binomial reader consumes bits in a
+ * value-dependent way. A real deployment must remove such secret-dependent
+ * timing (cf. the correlation-power-analysis result in ePrint 2025/721 cited in
+ * the References exhibit). See README "What Can Go Wrong".
+ *
  * coin flips, giving an integer in [−η, η] with mean 0 and variance η/2.
  */
 

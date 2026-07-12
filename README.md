@@ -47,6 +47,20 @@ npm install
 npm run dev
 ```
 
+## Tests
+
+The hand-rolled crypto is covered by unit tests (Vitest):
+
+```bash
+npm test        # crypto unit tests (Keccak KATs, BW₃₂, sampling, KEM round-trip)
+npm run test:a11y   # WCAG 2 A/AA accessibility gate (Playwright)
+```
+
+- **Keccak** is pinned to the published **FIPS-202 known-answer vectors** for SHA3-256/512 and SHAKE-128/256 (a wrong rotation offset or round constant would still look random but fail these).
+- **BW₃₂** is checked for noiseless round-trip on all 32 symbols, its error-correction radius, and the signed-peak decode property.
+- **Sampling** is checked for exact ternary Hamming weight and centered-binomial range/shape.
+- **KEM** is checked for KeyGen → Encaps → Decaps agreement (including the real Scloud+-128 params), that decapsulation reads the *actual* ciphertext, and that the FO transform performs **implicit rejection** on tampered ciphertexts.
+
 ## Related Demos
 
 - [crypto-lab-frodo-vault](https://systemslibrarian.github.io/crypto-lab-frodo-vault/) — FrodoKEM, the canonical unstructured-LWE KEM that Scloud+ is benchmarked against.
