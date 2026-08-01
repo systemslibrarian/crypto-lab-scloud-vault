@@ -330,12 +330,18 @@
       <h2>What the Textbook Doesn't Show</h2>
       <p>Standard LWE-KEM treatments stop at "add noise, hope it rounds away." S-Cloud+
          takes a different path: Barnes-Wall BW₃₂ lattice coding provides structured error
-         correction that <strong>doubles the tolerable noise</strong> compared to simple
-         rounding. This is the key insight — by encoding each 5-bit message chunk into a
-         32-dimensional lattice point, the decoder can correct errors up to the packing
-         radius of BW₃₂, letting the authors shrink modulus and matrix dimensions while
-         maintaining the same security level. The result: smaller keys than FrodoKEM at
-         comparable strength, without relying on algebraic ring structure like ML-KEM.</p>
+         correction, so instead of each message bit having to survive on its own, a whole
+         5-bit chunk is carried by a 32-dimensional lattice point and the decoder corrects
+         anything inside the packing radius of BW₃₂. That extra margin is what lets the
+         authors shrink the modulus and the matrix dimensions while holding the security
+         level, and it is where the size win comes from.</p>
+      <p>How big is the win? Take it from the paper's own claim rather than from a round
+         number: Scloud+ reports a public key roughly 0.71&ndash;0.87&times; and a ciphertext
+         roughly 0.56&ndash;0.78&times; the corresponding FrodoKEM sizes, at comparable
+         security and without relying on algebraic ring structure like ML-KEM. An earlier
+         version of this page said BW₃₂ "doubles the tolerable noise" compared with simple
+         rounding; that factor is not stated anywhere in the paper and has been dropped
+         rather than left standing as an unsourced number.</p>
     </section>
   </main>
 

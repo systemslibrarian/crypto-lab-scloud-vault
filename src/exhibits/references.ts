@@ -105,7 +105,7 @@ const BW_CODING: Ref[] = [
   { authors: 'Micciancio, Nicolosi', year: '2008', title: 'Efficient Bounded Distance Decoders for Barnes-Wall Lattices (the BW decoder Scloud+ uses)', venue: 'ISIT 2008', url: 'https://ieeexplore.ieee.org/document/4595427' },
   { authors: 'Lyu, Liu, Lai, Ling, Chen', year: '2022', title: 'Lattice Codes for Lattice-Based PKE', venue: 'Designs, Codes and Cryptography · ePrint 2022/874', url: 'https://eprint.iacr.org/2022/874' },
   { authors: 'Saliba, Luzzi, Ling', year: '2020', title: 'Wyner-Ziv Reconciliation for Key Exchange based on Ring-LWE (Barnes-Wall + bounded-distance decoding in a KEM)', venue: 'IACR ePrint 2020/076', url: 'https://eprint.iacr.org/2020/076' },
-  { authors: 'et al.', year: '2024', title: 'Tailorable Codes for Lattice-Based KEMs, with Applications to Compact ML-KEM Instantiations', venue: 'TCHES 2025 · ePrint 2024/1243', url: 'https://eprint.iacr.org/2024/1243' },
+  { authors: 'Paiva, Simplicio Jr, Hafiz, Yildiz, Cominetti, Ogawa', year: '2024', title: 'Tailorable Codes for Lattice-Based KEMs, with Applications to Compact ML-KEM Instantiations', venue: 'TCHES 2025 · ePrint 2024/1243', url: 'https://eprint.iacr.org/2024/1243' },
 ];
 
 const FOUNDATIONS: Ref[] = [

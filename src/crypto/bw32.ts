@@ -5,9 +5,12 @@
  * BW₃₂ is a 32-dimensional lattice that encodes 5 bits per 32 dimensions.
  * It provides error correction that enables smaller parameters vs FrodoKEM.
  *
- * Construction: BW₃₂ is built recursively as a (32,6,16) Reed-Muller code
- * RM(2,5) union of cosets. The lattice BW₃₂ = RM(2,5) scaled by 1/√2
- * in a Construction-D sense.
+ * Construction: the Barnes-Wall lattice BW₃₂ is built by Construction D over the
+ * nested Reed-Muller family RM(0,5) ⊂ RM(1,5) ⊂ RM(2,5). Getting the code
+ * parameters right matters here, because the two codes are easy to swap by
+ * mistake: RM(r,m) has length 2^m, dimension Σ_{i≤r} C(m,i) and minimum distance
+ * 2^(m−r), so RM(1,5) is a [32, 6, 16] binary code while RM(2,5) is [32, 16, 8].
+ * The (32, 6, 16) parameters belong to RM(1,5), NOT to RM(2,5).
  *
  * For the KEM application:
  * - Encode: map 5-bit message blocks to scaled coset representatives in Z_q
@@ -26,7 +29,7 @@
  * codewords. For BW₃₂ encoding of 5 bits, we use:
  *   - Bit 0: selects the all-ones codeword (overall sign)
  *   - Bits 1-4: select which of 16 basis vectors to use
- *   - The encoding maps 5 bits to a 32-dim vector scaled to q/2
+ *   - The encoding maps 5 bits to a 32-dim vector whose entries are ±q/4
  *
  * Encoding formula for message bits (b0, b1, b2, b3, b4):
  *   v[j] = q/4 * (-1)^(b0 + b1*j[0] + b2*j[1] + b3*j[2] + b4*j[3])

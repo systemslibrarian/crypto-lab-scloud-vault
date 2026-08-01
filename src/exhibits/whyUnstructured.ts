@@ -103,7 +103,7 @@ export function renderWhyUnstructured(container: HTMLElement): void {
         <li><strong>Mostly self-analyzed.</strong> The security analysis is strong but largely by the
             authors; independent third-party cryptanalysis is still thin.</li>
         <li><strong>Ternary secrets aren't a free lunch.</strong> Sparse/small secrets enable
-            dedicated <em>hybrid</em> and meet-in-the-middle attacks (May 2021; Bi et al. 2022). In the
+            dedicated <em>hybrid</em> and meet-in-the-middle attacks (May, CRYPTO 2021; Bi et al., ePrint 2026/1060). In the
             paper's own Table 4 the hybrid attack yields the <em>lowest</em> security figure — which is
             exactly why Scloud+ fixes the Hamming weight at n/2 rather than going sparser.</li>
         <li><strong>Novel components need review.</strong> The BW₃₂ labeling/delabeling is new

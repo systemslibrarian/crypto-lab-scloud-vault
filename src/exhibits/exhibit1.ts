@@ -13,6 +13,15 @@ export function renderExhibit1(container: HTMLElement): void {
     <p>S-Cloud+ uses a <strong>ternary secret</strong> <code>s ∈ {-1, 0, 1}</code> instead of
        Gaussian secrets (like FrodoKEM). This keeps coefficients small, enabling faster
        computation while BW₃₂ error correction compensates for the reduced entropy.</p>
+    <div class="callout warn">
+      <span class="callout-title">These are toy numbers — read them as a diagram, not as Scloud+</span>
+      This panel runs <code>n = 8</code> and <code>q = 251</code> so the whole matrix fits on screen
+      and you can check the arithmetic by hand. Real Scloud+ uses <code>n</code> in the hundreds
+      (600 at the 128-bit level) and <code>q = 4096 = 2¹²</code>. Nothing here is close to secure:
+      an 8×8 system over a 251-element field is solvable in milliseconds. The <em>shape</em> of the
+      computation — ternary secret, small error, <code>b = A·s + e mod q</code> — is the real thing;
+      the sizes are not.
+    </div>
     <div class="btn-group">
       <button class="btn" id="lwe-resample">⟳ Resample</button>
     </div>

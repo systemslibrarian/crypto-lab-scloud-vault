@@ -3,7 +3,13 @@
  * Qiu, Zeng, Yuan, Mu, Wang) and the IETF draft
  * draft-wang-tls-hybrid-ecdh-scloud-00.
  *
- * Every published number below is taken verbatim from the paper (Tables 2–8).
+ * Every published number below is taken from the paper (Tables 2–8) or, for the
+ * key/ciphertext sizes, from Table 1 of the IETF draft.
+ *
+ * specSkBytes previously read 3168 / 31296 / 43088. Those are not Scloud+
+ * figures at all: 3168 is ML-KEM-1024's decapsulation-key size, and 31296 /
+ * 43088 are FrodoKEM-976 / -1344 secret-key sizes quoted in BITS. They have been
+ * replaced with the decapsulation-key sizes the IETF draft actually lists.
  *
  * TWO kinds of numbers live here — keep them straight:
  *
@@ -96,7 +102,7 @@ export const SCLOUD_128: SCloudParams = {
   ssBytes: 16, // lss = 128 bits
   seedBytes: 32,
   specPkBytes: 7200,
-  specSkBytes: 3168,
+  specSkBytes: 14480, // IETF draft Table 1
   specCtBytes: 5456,
   specSsBytes: 16,
   specMN: [600, 600],
@@ -123,7 +129,7 @@ export const SCLOUD_192: SCloudParams = {
   ssBytes: 24,
   seedBytes: 32,
   specPkBytes: 11136,
-  specSkBytes: 31296,
+  specSkBytes: 21968, // IETF draft Table 1
   specCtBytes: 10832,
   specSsBytes: 24,
   specMN: [928, 896],
@@ -150,7 +156,7 @@ export const SCLOUD_256: SCloudParams = {
   ssBytes: 32,
   seedBytes: 32,
   specPkBytes: 18744,
-  specSkBytes: 43088,
+  specSkBytes: 37304, // IETF draft Table 1
   specCtBytes: 16916,
   specSsBytes: 32,
   specMN: [1136, 1120],

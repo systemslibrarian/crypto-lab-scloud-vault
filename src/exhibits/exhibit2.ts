@@ -27,8 +27,9 @@ export function renderExhibit2(container: HTMLElement): void {
       <div class="result-box">
         <div class="result-row">
           <span class="result-label">FrodoKEM:</span>
-          <span>Gaussian distribution over ℤ — entries can be any integer, concentrated near 0.
-          Secret coefficients ∈ {-12, …, +12} with χ distribution.</span>
+          <span>Rounded Gaussian over ℤ — entries can in principle be any integer, concentrated near 0,
+          and the sampled support is set per parameter set: {−12, …, +12} for FrodoKEM-640 (σ = 2.8),
+          narrowing to {−10, …, +10} for FrodoKEM-976 (σ = 2.3) and {−6, …, +6} for FrodoKEM-1344 (σ = 1.4).</span>
         </div>
         <div class="result-row">
           <span class="result-label">S-Cloud+:</span>
@@ -40,7 +41,7 @@ export function renderExhibit2(container: HTMLElement): void {
     <div class="callout warn">
       <span class="callout-title">Objectivity check: ternary isn't a free lunch</span>
       Small, sparse secrets have their <em>own</em> attack surface — dedicated hybrid and
-      meet-in-the-middle attacks (May 2021; Bi et al. 2022) target exactly this structure. That's why
+      meet-in-the-middle attacks (May, CRYPTO 2021; Bi et al., ePrint 2026/1060) target exactly this structure. That's why
       Scloud+ fixes the weight at <code>n/2</code> (not sparser), and why the <em>hybrid</em> attack
       gives the lowest security number in the paper's own analysis. Ternary buys speed and small
       parameters, but it must be chosen carefully — it is a trade-off, not a pure win.

@@ -77,35 +77,16 @@ function uniformRandomBelow(bound: number): number {
   }
 }
 
-/**
- * Sample a Gaussian error vector of length n with parameter σ.
- * Uses the Box-Muller transform with rounding to nearest integer.
- *
- * Per ePrint 2024/1306, error distribution is (rounded) Gaussian.
- */
-export function sampleGaussianError(n: number, sigma: number): Int16Array {
-  const result = new Int16Array(n);
-  const buf = new Uint8Array(8);
-
-  for (let i = 0; i < n; i += 2) {
-    // Box-Muller: two uniform [0,1) → two standard normals
-    let u1: number, u2: number;
-    do {
-      crypto.getRandomValues(buf);
-      u1 = bytesToFloat(buf, 0);
-      u2 = bytesToFloat(buf, 4);
-    } while (u1 === 0); // Avoid log(0)
-
-    const mag = sigma * Math.sqrt(-2 * Math.log(u1));
-    const angle = 2 * Math.PI * u2;
-    result[i] = Math.round(mag * Math.cos(angle));
-    if (i + 1 < n) {
-      result[i + 1] = Math.round(mag * Math.sin(angle));
-    }
-  }
-
-  return result;
-}
+// NOTE: a Box-Muller `sampleGaussianError` used to live here, annotated "Per
+// ePrint 2024/1306, error distribution is (rounded) Gaussian". That annotation
+// was wrong and unsourced: it contradicted this file's own header, params.ts,
+// the glossary, the README and the Exhibit 6 comparison table, all of which
+// (correctly) attribute the rounded Gaussian to FrodoKEM and give Scloud+ a
+// centered-binomial error. The Scloud+ reference implementation confirms it —
+// its noise sampler is a binomial-difference kernel (bd2 computes b₁ − b₂ from a
+// bit pair, bd4 from a nibble), not a Gaussian CDF table. The function was dead
+// code — nothing in src/ or test/ ever called it — so it has been removed rather
+// than left to re-seed the same confusion.
 
 /**
  * Sample a centered-binomial error vector of length n with parameter η.
@@ -161,15 +142,6 @@ export function binomialHistogram(arr: Int16Array, eta: number): number[] {
     if (idx >= 0 && idx < bins.length) bins[idx]++;
   }
   return bins;
-}
-
-/**
- * Convert 4 random bytes to a float in [0, 1).
- */
-function bytesToFloat(buf: Uint8Array, offset: number): number {
-  const u32 = (buf[offset] | (buf[offset + 1] << 8) |
-    (buf[offset + 2] << 16) | ((buf[offset + 3] & 0x7F) << 24)) >>> 0;
-  return u32 / 0x80000000;
 }
 
 /**
