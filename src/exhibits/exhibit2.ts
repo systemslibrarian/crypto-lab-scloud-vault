@@ -23,7 +23,7 @@ export function renderExhibit2(container: HTMLElement): void {
     <div id="ternary-stats" class="result-box" style="margin-bottom:1rem"></div>
     <div id="ternary-output"></div>
     <div style="margin-top:1.5rem">
-      <h4 style="margin-bottom:0.5rem">Comparison: FrodoKEM vs S-Cloud+ Secret Distribution</h4>
+      <h3 style="margin-bottom:0.5rem">Comparison: FrodoKEM vs S-Cloud+ Secret Distribution</h3>
       <div class="result-box">
         <div class="result-row">
           <span class="result-label">FrodoKEM:</span>

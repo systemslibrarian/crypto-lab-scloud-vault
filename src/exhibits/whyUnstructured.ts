@@ -19,7 +19,7 @@ export function renderWhyUnstructured(container: HTMLElement): void {
       decades, it's wiser to avoid that structure entirely — even at a cost in size and speed.
     </div>
 
-    <h4>What the structure buys — and what it might cost</h4>
+    <h3>What the structure buys — and what it might cost</h3>
     <p>ML-KEM's matrix isn't fully random; it lives in a <em>ring / module</em> over a cyclotomic
        field. That regularity is why its keys are ~1 KB instead of ~10 KB. But "extra mathematical
        regularity" is exactly the kind of thing attackers look to exploit. The open question is
@@ -27,7 +27,7 @@ export function renderWhyUnstructured(container: HTMLElement): void {
 
     <div class="scrutiny-grid">
       <div class="scrutiny-card scloud">
-        <h4>The case FOR caution (why China isn't crazy)</h4>
+        <h3>The case FOR caution (why China isn't crazy)</h3>
         <ul>
           <li><strong>There is a proven gap for ideal lattices.</strong> Quantum algorithms can find
               short vectors in <em>ideal</em> lattices of cyclotomic fields faster than in general
@@ -52,7 +52,7 @@ export function renderWhyUnstructured(container: HTMLElement): void {
         </ul>
       </div>
       <div class="scrutiny-card mlkem">
-        <h4>The case it's NOT alarming (why ML-KEM is also fine)</h4>
+        <h3>The case it's NOT alarming (why ML-KEM is also fine)</h3>
         <ul>
           <li><strong>Nothing here breaks ML-KEM.</strong> The ideal-lattice results attack a
               <em>related but different</em> problem (Ideal-SVP at large approximation factors). They
@@ -91,7 +91,7 @@ export function renderWhyUnstructured(container: HTMLElement): void {
       IETF draft proposes (ECDHE + Scloud+ together).
     </div>
 
-    <h4>Being objective: what Scloud+ actually gives up</h4>
+    <h3>Being objective: what Scloud+ actually gives up</h3>
     <p>A fair picture has to state Scloud+'s downsides plainly — the conservative bet is not free:</p>
     <div class="callout warn">
       <span class="callout-title">Honest criticisms of Scloud+</span>

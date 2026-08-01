@@ -20,10 +20,10 @@ export function renderTransparency(container: HTMLElement): void {
       tried in the open for years and couldn't."
     </div>
 
-    <h4>How much review has each had?</h4>
+    <h3>How much review has each had?</h3>
     <div class="scrutiny-grid">
       <div class="scrutiny-card mlkem">
-        <h4>ML-KEM (Kyber)</h4>
+        <h3>ML-KEM (Kyber)</h3>
         <div class="sub">NIST FIPS 203 — standardized 2024</div>
         ${meter('Years of public analysis', 'high', '~8 years')}
         ${meter('Independent cryptanalysis papers', 'high', 'thousands')}
@@ -36,7 +36,7 @@ export function renderTransparency(container: HTMLElement): void {
         </ul>
       </div>
       <div class="scrutiny-card scloud">
-        <h4>Scloud+</h4>
+        <h3>Scloud+</h3>
         <div class="sub">ePrint 2024/1306 · SSR 2024 · IETF draft (2024–)</div>
         ${meter('Years of public analysis', 'low', '~1–2 years')}
         ${meter('Independent cryptanalysis papers', 'low', 'few so far')}
@@ -62,7 +62,7 @@ export function renderTransparency(container: HTMLElement): void {
       response is more open analysis over time, which is exactly the process Scloud+ is entering.
     </div>
 
-    <h4>What ML-KEM's open process looked like</h4>
+    <h3>What ML-KEM's open process looked like</h3>
     <div class="timeline">
       <div class="timeline-item"><span class="timeline-year">2016</span><span class="timeline-text">NIST opens the public Post-Quantum Cryptography competition; anyone may submit and anyone may attack.</span></div>
       <div class="timeline-item"><span class="timeline-year">2017–22</span><span class="timeline-text">Three open rounds. Candidates broken or weakened by public cryptanalysis are dropped or revised.</span></div>
@@ -70,7 +70,7 @@ export function renderTransparency(container: HTMLElement): void {
       <div class="timeline-item"><span class="timeline-year">2024</span><span class="timeline-text">Published as ML-KEM in FIPS 203 — a finalized standard.</span></div>
     </div>
 
-    <h4>Why scrutiny matters (a concrete example)</h4>
+    <h3>Why scrutiny matters (a concrete example)</h3>
     <p>Public analysis genuinely changes what we believe is hard. For structured lattices, open
        research uncovered quantum algorithms that find short vectors in <em>ideal</em> lattices
        faster than in general ones — Biasse–Song (2016); Cramer–Ducas–Wesolowski (2017, 2021);

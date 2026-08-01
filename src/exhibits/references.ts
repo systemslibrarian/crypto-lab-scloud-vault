@@ -143,5 +143,5 @@ function group(title: string, refs: Ref[]): string {
       <a href="${r.url}" target="_blank" rel="noopener"><strong>${r.title}</strong></a><br>
       <span style="color:var(--text-muted);font-size:0.85rem">${r.authors} (${r.year}) — ${r.venue}</span>
     </li>`).join('');
-  return `<h4 style="margin-top:1.25rem">${title}</h4><ul style="list-style:none;margin-left:0">${items}</ul>`;
+  return `<h3 style="margin-top:1.25rem">${title}</h3><ul style="list-style:none;margin-left:0">${items}</ul>`;
 }

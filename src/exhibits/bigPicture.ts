@@ -26,19 +26,19 @@ export function renderBigPicture(container: HTMLElement): void {
       in this category — they are based on the hardness of <strong>lattice</strong> problems.
     </div>
 
-    <h4>The "safe" analogy</h4>
+    <h3>The "safe" analogy</h3>
     <p>Think of a post-quantum scheme as building a safe that even a future quantum computer can't crack.
        There are two design philosophies:</p>
     <div class="analogy">
       <div class="analogy-card">
         <span class="tag">NIST — ML-KEM / Kyber</span>
-        <h4>🔒 Compact &amp; fast safe</h4>
+        <h3>🔒 Compact &amp; fast safe</h3>
         <p>Built with clever mathematical shortcuts (<strong>structured</strong> lattices). Small,
            quick, practical — and studied by thousands of researchers for years.</p>
       </div>
       <div class="analogy-card">
         <span class="tag">China — Scloud+</span>
-        <h4>🏦 Bigger, more conservative safe</h4>
+        <h3>🏦 Bigger, more conservative safe</h3>
         <p>Avoids the shortcuts because some cryptographers worry they <em>might</em> hide
            undiscovered weaknesses. Uses plainer math (<strong>unstructured</strong> lattices)
            plus clever error-correcting codes to stay reasonably efficient.</p>
@@ -50,7 +50,7 @@ export function renderBigPicture(container: HTMLElement): void {
       shortcut that NIST chose.
     </div>
 
-    <h4>The differences in plain English</h4>
+    <h3>The differences in plain English</h3>
     <div class="table-scroll" role="region" aria-label="Plain-English comparison" tabindex="0">
     <table class="comparison-table">
       <thead>
@@ -97,7 +97,7 @@ export function renderBigPicture(container: HTMLElement): void {
     </table>
     </div>
 
-    <h4>What Scloud+ actually does (three ideas)</h4>
+    <h3>What Scloud+ actually does (three ideas)</h3>
     <ol class="big-ideas">
       <li><strong>Unstructured LWE.</strong> It uses the most basic form of the Learning-With-Errors
           problem — no ring or module structure — so there are fewer algebraic angles for an
@@ -111,7 +111,7 @@ export function renderBigPicture(container: HTMLElement): void {
     <p style="color:var(--text-muted)">Each of these has its own interactive exhibit below — open
        them to see the real computation.</p>
 
-    <h4>An honest comparison</h4>
+    <h3>An honest comparison</h3>
     <div class="qa">
       <div class="qa-item">
         <div class="qa-q">Is Scloud+ more secure than ML-KEM?</div>

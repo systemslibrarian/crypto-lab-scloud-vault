@@ -107,7 +107,7 @@ function stepOverview(): string {
   return `
     <div class="guide-step">
       <span class="guide-phase-label">The goal</span>
-      <h4>Two parties, one shared secret</h4>
+      <h3>Two parties, one shared secret</h3>
       <p>A KEM lets a sender create a fresh shared secret and "wrap" it for a specific public key.
          The owner of the matching secret key can "unwrap" it. Nobody else can.</p>
       <div class="formula">
@@ -132,7 +132,7 @@ function stepKeyGen(run: Run): string {
   return `
     <div class="guide-step">
       <span class="guide-phase-label">Step 1 of 3 — runs once, by the key owner</span>
-      <h4>Key Generation</h4>
+      <h3>Key Generation</h3>
       <div class="formula">
         S ← ternary secret matrix (each column weight n/2)&nbsp;&nbsp; E ← small error<br>
         B = <span class="hl">A·S + E</span>&nbsp; (mod q)&nbsp;&nbsp;→&nbsp;&nbsp;
@@ -160,7 +160,7 @@ function stepEncaps(run: Run): string {
   return `
     <div class="guide-step">
       <span class="guide-phase-label">Step 2 of 3 — runs on the sender's side</span>
-      <h4>Encapsulation</h4>
+      <h3>Encapsulation</h3>
       <div class="formula">
         m ← random message<br>
         (coins, k) = <span class="hl">G</span>(m ‖ H(pk))&nbsp;&nbsp;<span style="color:var(--text-muted)">— G = SHA3-512</span><br>
@@ -189,7 +189,7 @@ function stepDecaps(run: Run): string {
   return `
     <div class="guide-step">
       <span class="guide-phase-label">Step 3 of 3 — runs on the receiver's side</span>
-      <h4>Decapsulation</h4>
+      <h3>Decapsulation</h3>
       <div class="formula">
         D = C2 − C1·S&nbsp;&nbsp;→&nbsp;&nbsp;m′ = <span class="hl">Decode(D)</span><br>
         re-encrypt with m′ and check it matches the ciphertext (next step)<br>
@@ -217,7 +217,7 @@ function stepTamper(run: Run): string {
   return `
     <div class="guide-step">
       <span class="guide-phase-label">The security guarantee</span>
-      <h4>What if an attacker tampers with the ciphertext?</h4>
+      <h3>What if an attacker tampers with the ciphertext?</h3>
       <p>This is what the <strong>Fujisaki-Okamoto transform</strong> defends against. On
          decapsulation the receiver <em>re-encrypts</em> the recovered message and checks it
          reproduces the ciphertext byte-for-byte:</p>
@@ -247,7 +247,7 @@ function stepRecap(run: Run): string {
   return `
     <div class="guide-step">
       <span class="guide-phase-label">Recap</span>
-      <h4>You just ran a full post-quantum key exchange</h4>
+      <h3>You just ran a full post-quantum key exchange</h3>
       <ol style="color:var(--text-muted);margin-left:1.2rem">
         <li><strong>KeyGen</strong> published B = A·S + E and kept S secret (LWE hardness).</li>
         <li><strong>Encaps</strong> hid a random message m in a ciphertext and derived key K.</li>

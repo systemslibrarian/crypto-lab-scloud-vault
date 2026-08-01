@@ -28,14 +28,14 @@ export function renderExhibit6(container: HTMLElement): void {
       </label>
     </div>
 
-    <h4>Public key size (bytes — smaller is better)</h4>
+    <h3>Public key size (bytes — smaller is better)</h3>
     <div id="cmp-pk" class="barchart"></div>
-    <h4>Ciphertext size (bytes — smaller is better)</h4>
+    <h3>Ciphertext size (bytes — smaller is better)</h3>
     <div id="cmp-ct" class="barchart"></div>
     <div class="result-row src">Sources: Scloud+ &amp; FrodoKEM from ePrint 2024/1306 Tables 6–8;
        ML-KEM from FIPS 203. The bars are drawn to scale.</div>
 
-    <h4 style="margin-top:1.5rem">Structured vs unstructured lattices</h4>
+    <h3 style="margin-top:1.5rem">Structured vs unstructured lattices</h3>
     <p>Where does the size difference come from? The public matrix <strong>A</strong>. ML-KEM's
        matrix is <em>structured</em>: a tiny seed-row determines the rest, so it barely needs storing.
        Scloud+/FrodoKEM use a fully random matrix — no shortcuts, nothing to exploit, but more to store.</p>
@@ -59,7 +59,7 @@ export function renderExhibit6(container: HTMLElement): void {
       take that conservative bet.
     </div>
 
-    <h4 style="margin-top:1.5rem">Full comparison</h4>
+    <h3 style="margin-top:1.5rem">Full comparison</h3>
     <div class="table-scroll" role="region" aria-label="KEM comparison table" tabindex="0">
     <table class="comparison-table">
       <thead>
@@ -88,7 +88,7 @@ export function renderExhibit6(container: HTMLElement): void {
         <div class="node"><span class="answer">→ Scloud+</span> — BW₃₂ + ternary secrets shrink the unstructured approach. Newer, less reviewed (see Transparency &amp; Review).</div></div>
     </div>
 
-    <h4 style="margin-top:1.5rem">When would you actually pick each?</h4>
+    <h3 style="margin-top:1.5rem">When would you actually pick each?</h3>
     <div class="scenario-guide">
       <div class="scenario"><span class="pick mlkem">ML-KEM</span><span class="case">A TLS server, phone, or smart card today — you need a standard, small keys, and high speed, and you trust the years of public review.</span></div>
       <div class="scenario"><span class="pick scloud">Scloud+</span><span class="case">You want the conservative unstructured assumption but FrodoKEM's ~10–21 KB keys are too big for your bandwidth/storage — and you can accept a newer, less-reviewed scheme (ideally in a hybrid).</span></div>
@@ -171,7 +171,7 @@ function latticeCard(title: string, structured: boolean): string {
     ? 'One short row (a seed) generates every other row by rotation. Tiny to store — but that regularity is the algebraic structure attacks target.'
     : 'Every entry is independent and random. Nothing to exploit, nothing to compress — so the key is large.';
   return `<div class="lattice-card">
-    <h4>${title}</h4>
+    <h3>${title}</h3>
     <div class="lattice-grid" style="grid-template-columns:repeat(${N},1fr)">${cells}</div>
     <div class="lattice-note">${note}</div>
   </div>`;

@@ -25,7 +25,7 @@ export function renderExhibit3(container: HTMLElement): void {
       exactly the job BW₃₂ does for Scloud+.
     </div>
 
-    <h4>Encoding: 5-bit Message → 32-dimensional Coset Representative</h4>
+    <h3>Encoding: 5-bit Message → 32-dimensional Coset Representative</h3>
     <div class="btn-group">
       <label class="inline-label">
         Message (0–31):
@@ -36,7 +36,7 @@ export function renderExhibit3(container: HTMLElement): void {
     </div>
     <div id="bw32-encode-output"></div>
 
-    <h4 style="margin-top:1.5rem">Decoding with Noise: Error Correction in Action</h4>
+    <h3 style="margin-top:1.5rem">Decoding with Noise: Error Correction in Action</h3>
     <p>Add noise to the encoded vector and see BW₃₂ decode it back correctly — until the noise
        exceeds the correction radius, at which point decryption fails.</p>
     <div class="btn-group">
@@ -50,7 +50,7 @@ export function renderExhibit3(container: HTMLElement): void {
     </div>
     <div id="bw32-decode-output"></div>
 
-    <h4 style="margin-top:1.5rem">Batch Test: Success Rate vs Noise Level</h4>
+    <h3 style="margin-top:1.5rem">Batch Test: Success Rate vs Noise Level</h3>
     <button class="btn btn-secondary" id="bw32-batch-btn">Run 100 Trials</button>
     <div id="bw32-batch-output"></div>
   `;

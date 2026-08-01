@@ -100,12 +100,12 @@ export function renderExhibit5(container: HTMLElement): void {
 function foBranch(taken: 'accept' | 'reject'): string {
   return `<div class="fo-branch">
     <div class="fo-branch-card accept ${taken === 'accept' ? '' : 'dim'}">
-      <h5>✓ Re-encryption matches → ACCEPT</h5>
+      <h4>✓ Re-encryption matches → ACCEPT</h4>
       <div class="mono">ss = K(k′ ‖ C)</div>
       <div class="note">Ciphertext is authentic — return the real shared secret.</div>
     </div>
     <div class="fo-branch-card reject ${taken === 'reject' ? '' : 'dim'}">
-      <h5>✗ Mismatch → IMPLICIT REJECT</h5>
+      <h4>✗ Mismatch → IMPLICIT REJECT</h4>
       <div class="mono">ss = K(z ‖ C)</div>
       <div class="note">Invalid/tampered — return a pseudo-random key from secret seed z. No error leaked.</div>
     </div>

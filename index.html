@@ -149,11 +149,6 @@
 </head>
 
 <body>
-<!-- BEGIN crypto-lab shared header — managed; edit shared-header.html + re-run reapply-header.py
-     Identical on every lab. Self-contained styles. Accents use each demo's own
-     --accent CSS variable (teal #35d6bb fallback). The ONLY per-repo value is the
-     repo name (crypto-lab-scloud-vault) in the GitHub link.
-     Source of truth: github.com/systemslibrarian/crypto-lab/shared-header.html -->
 <style>
   .cl-topbar{
     /* The bar is always dark (#0b1512) regardless of page theme, so header
@@ -265,7 +260,6 @@
     else dedupeBanner();
   })();
 </script>
-<!-- END crypto-lab shared header -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <main class="container" id="main-content">
@@ -283,7 +277,7 @@
 
     <!-- Start here -->
     <section class="start-here">
-      <h3>New here? Here's the path</h3>
+      <h2>New here? Here's the path</h2>
       <p>The sections are ordered easiest → deepest. You don't need any math background to start.</p>
       <ol>
         <li><strong>The Big Picture</strong> — plain-English idea, no math.</li>
@@ -295,7 +289,7 @@
 
     <!-- Table of contents -->
     <nav class="toc" aria-label="Sections">
-      <h3>Contents</h3>
+      <h2>Contents</h2>
       <div id="toc-grid" class="toc-grid"></div>
     </nav>
 
@@ -308,10 +302,10 @@
 
     <!-- Reality / Limits Panel -->
     <section class="reality-panel">
-      <h3>Reality Check</h3>
+      <h2>Reality Check</h2>
       <div class="reality-columns">
         <div class="reality-col">
-          <h4>What This Demo <em>Is</em></h4>
+          <h3>What This Demo <em>Is</em></h3>
           <ul>
             <li>A faithful-but-simplified TypeScript implementation of the ePrint 2024/1306 ideas</li>
             <li>Real SHAKE-256, SHA3-256 and SHA3-512 running in your browser (pure Keccak)</li>
@@ -320,7 +314,7 @@
           </ul>
         </div>
         <div class="reality-col">
-          <h4>What This Demo <em>Is Not</em></h4>
+          <h3>What This Demo <em>Is Not</em></h3>
           <ul>
             <li>Not constant-time — JavaScript cannot guarantee timing-safe execution</li>
             <li>Not audited or suitable for production key exchange</li>
@@ -333,7 +327,7 @@
 
     <!-- Educational Insight Panel -->
     <section class="insight-panel">
-      <h3>What the Textbook Doesn't Show</h3>
+      <h2>What the Textbook Doesn't Show</h2>
       <p>Standard LWE-KEM treatments stop at "add noise, hope it rounds away." S-Cloud+
          takes a different path: Barnes-Wall BW₃₂ lattice coding provides structured error
          correction that <strong>doubles the tolerable noise</strong> compared to simple

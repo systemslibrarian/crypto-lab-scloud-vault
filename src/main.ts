@@ -78,7 +78,7 @@ EXHIBITS.forEach((def, idx) => {
     ? `<span class="level-pill ${def.level}">${def.level === 'beginner' ? 'Start here' : 'Core'}</span>`
     : '';
   header.innerHTML = `
-    <h3><span class="exhibit-number" aria-hidden="true">${num}</span> ${def.title}${pill}</h3>
+    <h2><span class="exhibit-number" aria-hidden="true">${num}</span> ${def.title}${pill}</h2>
     <span class="toggle-icon" aria-hidden="true">${def.collapsed ? '▶' : '▼'}</span>
   `;
 

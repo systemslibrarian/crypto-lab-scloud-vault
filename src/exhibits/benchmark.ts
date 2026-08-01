@@ -14,7 +14,7 @@ export function renderBenchmark(container: HTMLElement): void {
        implementation, and the <strong>real published numbers</strong> from the paper (measured in
        CPU cycles on the same machine as FrodoKEM).</p>
 
-    <h4>Live benchmark (this demo, in your browser)</h4>
+    <h3>Live benchmark (this demo, in your browser)</h3>
     <div class="btn-group">
       <select id="bm-level" class="param-select" aria-label="Parameter set for benchmark">
         ${ALL_PARAMS.map(p => `<option value="${p.securityLevel}">${p.name}</option>`).join('')}
@@ -31,7 +31,7 @@ export function renderBenchmark(container: HTMLElement): void {
       implementation — they are for relative feel only, not a real performance claim.</div>
     <div id="bm-live"></div>
 
-    <h4 style="margin-top:1.5rem">Published performance — Scloud+ vs FrodoKEM</h4>
+    <h3 style="margin-top:1.5rem">Published performance — Scloud+ vs FrodoKEM</h3>
     <p>From ePrint 2024/1306 (Tables 5 &amp; 7), in 10³ CPU cycles, same platform. Lower is faster.</p>
     <div id="bm-spec"></div>
     <div class="callout why"><span class="callout-title">And ML-KEM?</span>
