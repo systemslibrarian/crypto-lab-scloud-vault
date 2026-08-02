@@ -915,13 +915,9 @@ code, pre {
 .scrutiny-card.scloud { border-top: 3px solid var(--accent); }
 .scrutiny-card h3 { font-size: 1.05rem; margin-bottom: 0.25rem; }
 .scrutiny-card .sub { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem; }
-.scrutiny-meter { margin: 0.75rem 0; }
-.scrutiny-meter .label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-.meter-track { background: var(--bg-card-alt); border-radius: 6px; height: 10px; overflow: hidden; }
-.meter-fill { height: 100%; border-radius: 6px; }
-.meter-fill.high { background: var(--success); }
-.meter-fill.med { background: var(--warning); }
-.meter-fill.low { background: var(--text-muted); }
+.scrutiny-fact { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(10rem, 1.4fr); gap: 0.75rem; align-items: baseline; margin: 0.65rem 0; padding-bottom: 0.45rem; border-bottom: 1px solid var(--border); font-size: 0.78rem; color: var(--text-muted); }
+.scrutiny-fact strong { color: var(--text); font-weight: 600; text-align: right; }
+@media (max-width: 420px) { .scrutiny-fact { grid-template-columns: 1fr; gap: 0.2rem; } .scrutiny-fact strong { text-align: left; } }
 .scrutiny-card ul { margin: 0.5rem 0 0 1.1rem; color: var(--text-muted); font-size: 0.86rem; }
 .scrutiny-card li { margin-bottom: 0.3rem; }
 

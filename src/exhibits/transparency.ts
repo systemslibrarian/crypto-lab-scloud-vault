@@ -25,9 +25,9 @@ export function renderTransparency(container: HTMLElement): void {
       <div class="scrutiny-card mlkem">
         <h3>ML-KEM (Kyber)</h3>
         <div class="sub">NIST FIPS 203 — standardized 2024</div>
-        ${meter('Years of public analysis', 'high', '~8 years')}
-        ${meter('Independent cryptanalysis papers', 'high', 'thousands')}
-        ${meter('Standards-body review', 'high', 'extensive')}
+        ${reviewFact('Public process', 'NIST PQC: 2016–2024')}
+        ${reviewFact('Independent analysis', 'multi-round public record')}
+        ${reviewFact('Standards-body review', '3 public rounds + FIPS 203')}
         <ul>
           <li>Came through the multi-year, fully public NIST PQC competition (2016–2024).</li>
           <li>Three open rounds; every candidate attacked by teams worldwide.</li>
@@ -38,9 +38,9 @@ export function renderTransparency(container: HTMLElement): void {
       <div class="scrutiny-card scloud">
         <h3>Scloud+</h3>
         <div class="sub">ePrint 2024/1306 · SSR 2024 · IETF draft (2024–)</div>
-        ${meter('Years of public analysis', 'low', '~1–2 years')}
-        ${meter('Independent cryptanalysis papers', 'low', 'few so far')}
-        ${meter('Standards-body review', 'med', 'early / draft')}
+        ${reviewFact('Public process', 'published in 2024')}
+        ${reviewFact('Independent analysis', 'limited; examples linked below')}
+        ${reviewFact('Standards-body review', 'individual IETF draft')}
         <ul>
           <li>Published as a research paper with a full security analysis <em>by its authors</em>.</li>
           <li>Has an individual IETF draft for hybrid TLS 1.3 — explicitly <em>not</em> endorsed by
@@ -104,10 +104,8 @@ export function renderTransparency(container: HTMLElement): void {
   `;
 }
 
-function meter(label: string, level: 'high' | 'med' | 'low', value: string): string {
-  const pct = level === 'high' ? 100 : level === 'med' ? 45 : 18;
-  return `<div class="scrutiny-meter">
-    <div class="label"><span>${label}</span><span>${value}</span></div>
-    <div class="meter-track"><div class="meter-fill ${level}" style="width:${pct}%"></div></div>
+function reviewFact(label: string, value: string): string {
+  return `<div class="scrutiny-fact">
+    <span>${label}</span><strong>${value}</strong>
   </div>`;
 }

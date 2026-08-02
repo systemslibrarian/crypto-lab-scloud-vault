@@ -8,7 +8,7 @@ Scloud+ is a lattice-based KEM built on the **unstructured** Learning With Error
 
 Every cryptographic primitive — SHA3-256/512, SHAKE-256, BW₃₂ encode/decode, ternary + binomial sampling, and the full KEM round-trip — is implemented in **pure TypeScript** with zero runtime dependencies, and runs entirely in your browser.
 
-> **Learning tool, not a library.** For readable, fast in-browser demos the KEM uses a faithful but *simplified* single-vector formulation, so the bytes it produces are smaller than the official spec sizes (which are shown alongside, sourced from the paper). The algorithm, security model, and FO transform are real; only the matrix structure is scaled down. Not constant-time, not audited, not for production.
+> **Learning tool, not a library.** The in-browser KEM uses full matrix LWE (`B` and `S` are `n×32`, not single vectors), but simplifies the official message geometry, BW₃₂ coding, and byte encoding. Its output is therefore not byte-compatible with the official parameter sets, whose published sizes are shown alongside. Not constant-time, not audited, not for production.
 
 ## When to Use It
 
@@ -25,7 +25,7 @@ The demo is organized into twelve sections ordered easiest to deepest, from a pl
 
 ## What Can Go Wrong
 
-- **Confusing demo sizes with spec sizes** — the demo's simplified single-vector formulation produces smaller bytes than the official Scloud+ parameter sets; only the spec sizes (shown alongside) reflect real deployments.
+- **Confusing demo sizes with spec sizes** — the demo's full `n×32` matrices use simplified geometry and encoding, so their byte lengths are not official Scloud+ sizes; only the sourced spec sizes shown alongside reflect the proposal.
 - **Treating the implementation as constant-time** — it is not; a real KEM must avoid secret-dependent timing in sampling, decoding, and the FO comparison to resist side-channel attacks.
 - **Decryption failures** — LWE KEMs have a non-zero decryption-failure rate; parameters must bound it low enough that an attacker cannot exploit failures to recover the secret.
 - **Skipping the FO transform** — the raw LWE PKE is only CPA-secure; the Fujisaki-Okamoto transform with implicit rejection is what provides the IND-CCA2 security needed against active attackers.

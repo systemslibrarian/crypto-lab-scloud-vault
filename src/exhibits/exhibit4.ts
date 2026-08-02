@@ -99,10 +99,10 @@ function renderKeyGenResult(
       <span class="callout-title">Demo size vs official size</span>
       This demo's public key is <strong>${pkBytes.length} bytes</strong>; the real ${params.name}
       public key is <strong>${params.specPkBytes.toLocaleString()} bytes</strong> (paper Table 6).
-      The difference is expected: the real scheme stores <code>B</code> as a full
-      ${params.specMN[0]}×n̄ matrix, while this demo uses a single-vector simplification so the
-      computation stays fast and the vectors stay readable. The algorithm and security ideas are the
-      same — only the structure is scaled down.
+      These differ because this teaching KEM is not the paper's byte format: it uses a full
+      <code>${params.n}×32</code> matrix <code>B</code>, a simplified 32-column message geometry,
+      and demo packing/coding. It is matrix LWE—not a single-vector construction—but its dimensions
+      and encoding are not the paper's official parameterization.
     </div>
   `;
 }

@@ -21,11 +21,11 @@
  *      Scloud+ stores B as a full m×n̄ matrix and uses BW₃₂ labeling over the
  *      Gaussian integers Z[i] with modulus switching (q,q1,q2). Doing all that
  *      in the browser for every keygen would be slow and the on-screen vectors
- *      would be unreadable. So our in-browser KEM uses a faithful-but-simplified
- *      single-vector formulation: still real unstructured LWE + ternary secret +
- *      centered-binomial error + BW₃₂-style coding + a real FO transform, just
- *      smaller in structure. The bytes our demo produces therefore do NOT equal
- *      the spec sizes — that is expected and is called out in the UI.
+ *      would be unreadable. Our in-browser KEM still uses full matrix LWE:
+ *      B and S are n×32 matrices, not single vectors. It simplifies the official
+ *      message geometry, BW₃₂ coding and byte encoding, so its output is not
+ *      byte-compatible with the paper's parameter sets. That distinction is
+ *      called out in the UI.
  *
  * Scloud+ design highlights:
  *   - Unstructured LWE (no ring/module structure) — conservative assumption
