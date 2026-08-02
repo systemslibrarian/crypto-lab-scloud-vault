@@ -29,6 +29,7 @@
   --bg-card-alt: #1c2333;
   --bg-code: #1e2430;
   --border: #30363d;
+  --control-border: #657385;
   --text: #e6edf3;
   --text-muted: #8b949e;
   --accent: #58a6ff;
@@ -64,6 +65,7 @@
   --bg-card-alt: #eef1f5;
   --bg-code: #f0f2f5;
   --border: #d0d7de;
+  --control-border: #6f7b87;
   --text: #1f2328;
   --text-muted: #656d76;
   --accent: #0969da;
@@ -145,7 +147,7 @@ code, pre {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%238b949e' stroke-width='1.5' d='M2.5 4.5L6 8l3.5-3.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.6rem center;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: var(--radius);
   padding: 0.4rem 2rem 0.4rem 0.8rem;
   color: var(--text);
