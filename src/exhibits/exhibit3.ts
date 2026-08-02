@@ -94,7 +94,21 @@ export function renderExhibit3(container: HTMLElement): void {
       if (demo.success) successes++;
     }
     const rate = ((successes / trials) * 100).toFixed(1);
-    const cls = successes === trials ? 'success' : successes > 80 ? 'result-value' : 'danger';
+    const ratio = successes / trials;
+    const cls = successes === trials ? 'success' : ratio > 0.8 ? 'result-value' : 'danger';
+    // Describe where the measured rate actually sits. "Near the boundary" is
+    // only true when decoding is close to even; 7/100 is well past it, and
+    // saying otherwise contradicts the number printed directly above.
+    const verdict =
+      successes === trials
+        ? '✓ All decoded correctly — noise is within the BW₃₂ correction radius.'
+        : successes === 0
+          ? '✗ All failed — noise exceeds the BW₃₂ correction radius. Decryption failure!'
+          : ratio >= 0.8
+            ? `⚠ Mostly decoded (${rate}%) — noise is at the edge of the correction radius, and some words already exceed it.`
+            : ratio >= 0.2
+              ? `⚠ Near the boundary (${rate}%) — noise straddles the correction radius, so decoding is close to a coin flip.`
+              : `✗ Mostly failed (only ${rate}% decoded) — noise is past the correction radius for all but the luckiest words.`;
     batchOutput.innerHTML = `
       <div class="result-box fade-in">
         <div class="result-row">
@@ -105,11 +119,7 @@ export function renderExhibit3(container: HTMLElement): void {
           <span class="${cls}">${successes}/${trials} (${rate}%)</span>
         </div>
         <div class="result-row" style="color:var(--text-muted)">
-          ${successes === trials
-        ? '✓ All decoded correctly — noise is within BW₃₂ correction radius.'
-        : successes === 0
-          ? '✗ All failed — noise exceeds BW₃₂ correction radius. Decryption failure!'
-          : '⚠ Partial failure — noise is near the boundary of the correction radius.'}
+          ${verdict}
         </div>
       </div>
     `;
