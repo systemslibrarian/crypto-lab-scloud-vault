@@ -1,84 +1,59 @@
-import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import {
+  boot,
+  driveAllStates,
+  expectBaselineNotStale,
+  NARROW,
+  reportCollected,
+  watchPageErrors,
+} from './gate';
 
 /**
- * Strict WCAG regression gate. Scans the full page in both themes with every
- * collapsible exhibit expanded and every live demo driven, so dynamically
- * injected result regions are covered. Asserts zero WCAG 2 A/AA violations.
+ * WCAG A/AA regression gate for the Scloud+ Explorer.
+ *
+ * The lab is driven along everything it teaches: the arrival state, where ten
+ * exhibits are open, two are collapsed AND UNRENDERED, and three have already
+ * generated output on mount; the shared skip link focused; both collapsed
+ * exhibits opened through their own `role="button"` headers so the lazy render
+ * runs the way it runs for a reader; the LWE core resampled; the ternary
+ * sampler on both its instant and its animated route, including the state where
+ * the animation holds both buttons disabled; BW₃₂ encoded at its maximum 5-bit
+ * message and then driven OUT of its 0–31 range, and decoded at both ends of
+ * the noise slider — zero, where every trial decodes, and 1400, where none do
+ * and the failure ink is painted; KeyGen and Encaps/Decaps at both parameter
+ * sets, then the tamper button, which is the only route to the FO transform's
+ * reject branch and its dimmed twin; the comparison exhibit redrawn; the live
+ * benchmark measured in the browser; every step of the guided walkthrough
+ * including both ends where a nav button is inactive, and its Reset; the
+ * glossary tooltip opened by KEYBOARD FOCUS and dismissed; the scrolled page,
+ * where `#back-to-top` and the TOC scroll-spy appear; and Collapse-all followed
+ * by Expand-all. Every one of those states is scanned, in both themes, at
+ * desktop and phone width.
+ *
+ * See `gate.ts` for why nothing is injected into the page, why no panel is
+ * force-revealed, why the lab's defaults are asserted rather than assumed, and
+ * why `violations` is not the whole oracle.
  */
 
-const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+for (const theme of ['dark', 'light'] as const) {
+  test(`no WCAG A/AA violations in ${theme} theme`, async ({ page }) => {
+    test.setTimeout(1_800_000);
+    const errors = watchPageErrors(page);
+    await boot(page, theme);
+    await driveAllStates(page, theme);
+    expect(errors, errors.join('\n')).toEqual([]);
+    expectBaselineNotStale();
+    reportCollected();
+  });
 
-async function neutralizeAnimations(page: Page): Promise<void> {
-  await page.addStyleTag({
-    content: `*, *::before, *::after {
-      transition: none !important;
-      animation: none !important;
-    }`,
+  test(`no WCAG A/AA violations in ${theme} theme at 380px`, async ({ page }) => {
+    test.setTimeout(1_800_000);
+    const errors = watchPageErrors(page);
+    await page.setViewportSize(NARROW);
+    await boot(page, theme);
+    await driveAllStates(page, `${theme} @380px`);
+    expect(errors, errors.join('\n')).toEqual([]);
+    expectBaselineNotStale();
+    reportCollected();
   });
 }
-
-async function revealEverything(page: Page): Promise<void> {
-  // Native <details>, if any.
-  await page.evaluate(() => {
-    for (const d of document.querySelectorAll('details')) d.open = true;
-  });
-  // Expand every class/style-toggled exhibit via the page control.
-  const expandAll = page.locator('#expand-all');
-  if (await expandAll.count()) {
-    await expandAll.click();
-  }
-  // Drive every live demo (run/encrypt/keygen/attack buttons) so the async
-  // result regions they inject exist before we scan. Best-effort: ignore any
-  // that are not clickable.
-  const drivers = page.locator(
-    'button:has-text("Run"), button:has-text("Generate"), button:has-text("KeyGen"), ' +
-      'button:has-text("Encaps"), button:has-text("Decaps"), button:has-text("Encrypt"), ' +
-      'button:has-text("Decrypt"), button:has-text("Step"), button:has-text("Next"), ' +
-      'button:has-text("Sample"), button:has-text("Compute"), button:has-text("Start"), ' +
-      'button:has-text("Tamper"), button:has-text("Detect"), button:has-text("Attack"), ' +
-      'button:has-text("Benchmark"), button:has-text("Animate"), button:has-text("Resample")',
-  );
-  const n = await drivers.count();
-  for (let i = 0; i < n; i++) {
-    const btn = drivers.nth(i);
-    try {
-      if (await btn.isVisible() && await btn.isEnabled()) {
-        await btn.click({ timeout: 1000 });
-      }
-    } catch {
-      /* best-effort */
-    }
-  }
-  // Let any injected output settle.
-  await page.waitForTimeout(300);
-}
-
-async function scan(page: Page): Promise<void> {
-  const results = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-  const summary = results.violations.map((v) => ({
-    id: v.id,
-    impact: v.impact,
-    help: v.help,
-    nodes: v.nodes.map((node) => node.target.join(' ')).slice(0, 5),
-  }));
-  expect(summary).toEqual([]);
-}
-
-test('no WCAG A/AA violations in dark theme', async ({ page }) => {
-  await page.goto('.');
-  await expect(page.locator('#exhibits')).toBeVisible();
-  await neutralizeAnimations(page);
-  await revealEverything(page);
-  await scan(page);
-});
-
-test('no WCAG A/AA violations in light theme', async ({ page }) => {
-  await page.goto('.');
-  await expect(page.locator('#exhibits')).toBeVisible();
-  await page.locator('#cl-theme-toggle').click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  await neutralizeAnimations(page);
-  await revealEverything(page);
-  await scan(page);
-});

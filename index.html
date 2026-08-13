@@ -222,7 +222,13 @@
     .cl-btn,.cl-icon{min-width:44px}
   }
 </style>
-<a class="cl-skip-link" href="#app">Skip to content</a>
+<!-- The shared bar's skip link. The fleet template points this at `#app`, the
+     id most labs give their <main>; this lab's main region is `#main-content`,
+     so the template href resolved to nothing and the FIRST focusable element on
+     the page was a skip link that skipped nowhere. axe never flagged it — its
+     skip-link rule is best-practice, not WCAG-tagged, so a `withTags(['wcag2a',
+     …])` run does not execute it at all. -->
+<a class="cl-skip-link" href="#main-content">Skip to content</a>
 <header class="cl-topbar" role="banner" aria-label="Crypto Lab">
   <a class="cl-brand" href="https://crypto-lab.systemslibrarian.dev/" aria-label="Crypto Lab home">
     <span class="cl-badge">CL</span>

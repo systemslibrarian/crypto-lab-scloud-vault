@@ -135,7 +135,21 @@ export function initGlossary(): void {
     else hide();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
-  window.addEventListener('scroll', () => { if (!pinned) hide(); }, { passive: true });
+  // Scrolling moves the term out from under a bubble positioned in viewport
+  // coordinates, so the bubble has to react. It must NOT simply hide, though:
+  // moving focus to a term SCROLLS IT INTO VIEW, which fires this listener,
+  // which closed the tooltip that the focus had just opened — so a keyboard
+  // reader could never see the definition of any term that was not already on
+  // screen, while a mouse user (no scroll on hover) always could. Reposition
+  // while a term still holds focus; hide only when none does.
+  window.addEventListener('scroll', () => {
+    if (pinned) return;
+    const focused = (document.activeElement as HTMLElement | null)?.closest?.('.term') as
+      | HTMLElement
+      | null;
+    if (focused) showFor(focused);
+    else hide();
+  }, { passive: true });
 }
 
 function escapeRe(s: string): string { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }

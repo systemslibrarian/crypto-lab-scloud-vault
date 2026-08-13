@@ -30,7 +30,7 @@ export function renderExhibit3(container: HTMLElement): void {
       <label class="inline-label">
         Message (0–31):
         <input type="number" id="bw32-msg-input" min="0" max="31" value="13"
-               style="width:60px; padding:4px; background:var(--bg-code); border:1px solid var(--border); color:var(--text); border-radius:4px;">
+               style="width:60px; padding:4px; background:var(--bg-code); border:1px solid var(--control-border); color:var(--text); border-radius:4px;">
       </label>
       <button class="btn" id="bw32-encode-btn">Encode</button>
     </div>
@@ -146,7 +146,18 @@ function renderEncoding(msg: number, encoded: Int32Array, q: number): string {
     const val = encoded[i];
     const isPositive = val === scale;
     const bg = isPositive ? 'var(--positive)' : 'var(--negative)';
-    html += `<div class="bw32-cell" style="background:${bg};color:#fff" title="v[${i}]=${val}" aria-hidden="true">${isPositive ? '+' : '\u2212'}</div>`;
+    // `--on-fill`, not `#fff`. The plus/minus glyph is the ONLY non-colour cue
+    // separating a positive coset coordinate from a negative one, so a reader
+    // who cannot tell the green fill from the red one has nothing else to go
+    // on — and hard-coded white measured 2.54:1 on the dark theme's
+    // `--positive` (#3fb950) and 3.35:1 on its `--negative` (#f85149), both
+    // under the 4.5:1 an 11px glyph needs. Neither oracle can see it: the grid
+    // is `role="img"` with `aria-hidden` cells, which is exactly the blind spot
+    // axe and the arithmetic text walk share, so it was measured by hand.
+    // `--on-fill` is the page near-black in dark (7.45:1 and 5.65:1) and white
+    // in light, where the darker `--positive`/`--negative` already carry white
+    // comfortably (5.08:1 and 5.36:1) — so the light rendering does not move.
+    html += `<div class="bw32-cell" style="background:${bg};color:var(--on-fill)" title="v[${i}]=${val}" aria-hidden="true">${isPositive ? '+' : '\u2212'}</div>`;
   }
   html += `</div>`;
 

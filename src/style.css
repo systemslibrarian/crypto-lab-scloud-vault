@@ -219,23 +219,43 @@ code, pre {
 }
 
 /* ── Exhibit Panels ─────────────────── */
+/* The card outline used to be `--border`, a SURFACE divider, and it was the
+   only thing delineating the exhibit header — which is a `role="button"`
+   disclosure control, not decoration. Measured against the page background it
+   came to 1.55:1 in dark and 1.44:1 in light, under the 3:1 SC 1.4.11 asks of a
+   control boundary; the header's own fill (`--bg-card-alt` over the page) was
+   worse still at 1.21:1 dark / 1.09:1 light.
+
+   `--control-border` is the token the palette already defines for exactly this
+   and it was applied to ONE selector in the whole stylesheet (`.param-select`)
+   — which happened to be the one selector the repo's old `border.spec.ts`
+   measured. So the outline is drawn on the header itself rather than on the
+   wrapper, and the body carries the matching three sides: the card reads
+   identically, and the CONTROL now owns a boundary of its own on all four
+   sides at 3.92:1 dark / 4.24:1 light. */
 .exhibit {
   background: var(--bg-card);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 2rem;
-  overflow: hidden;
 }
 
 .exhibit-header {
   background: var(--bg-card-alt);
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius) var(--radius) 0 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
   user-select: none;
+}
+
+/* A collapsed exhibit is a header on its own, so it closes its own box. The
+   state is read from the attribute `main.ts` already maintains rather than from
+   a second class that could drift out of step with it. */
+.exhibit-header[aria-expanded='false'] {
+  border-radius: var(--radius);
 }
 
 .exhibit-header h2 {
@@ -268,6 +288,9 @@ code, pre {
 
 .exhibit-body {
   padding: 1.5rem;
+  border: 1px solid var(--control-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
 .exhibit-body p {
@@ -856,7 +879,17 @@ code, pre {
   font-size: 0.78rem; font-weight: 700;
 }
 .guide-dot.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
-.guide-dot.done { background: rgba(63,185,80,0.2); color: var(--success); border-color: var(--success); }
+/* The three other faint-tint pills in this stylesheet (`.toc-badge.beginner`,
+   `.level-pill.beginner`, `.level-pill.core`) all take their ink from
+   `--badge-*-text`, the token defined for a semantic word sitting on its own
+   tint. This one was left on the raw `--success`, and the tint literal
+   `rgba(63,185,80,.2)` is the DARK theme's green in both themes: over the light
+   card it composites to rgb(210, 235, 216), a surface the palette's numbers
+   never described, and the light `--success` (#1a7f37) measured 4.03:1 there —
+   under AA for a 12.5px glyph. `--badge-success-text` is #116029 in light
+   (6.09:1 on that composite) and identical to `--success` in dark, so the dark
+   rendering does not move. */
+.guide-dot.done { background: rgba(63,185,80,0.2); color: var(--badge-success-text); border-color: var(--success); }
 .guide-line { flex: 1 1 12px; height: 2px; min-width: 8px; background: var(--border); }
 .guide-line.done { background: var(--success); }
 
@@ -974,11 +1007,21 @@ code, pre {
   line-height: 1.5;
   color: var(--text);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  /* Same reasoning as `#back-to-top` below: this bubble keeps the definition
+     of the LAST term hovered in its DOM after it fades out, so at `opacity: 0`
+     alone it is a `role="tooltip"` full of live text that is still in the
+     accessibility tree and still measured by every contrast oracle, describing
+     ink that is not on screen. `visibility: hidden` takes it out of both. */
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.12s ease;
+  transition: opacity 0.12s ease, visibility 0s linear 0.12s;
 }
-.glossary-tip.visible { opacity: 1; }
+.glossary-tip.visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.12s ease, visibility 0s linear 0s;
+}
 .glossary-tip strong {
   display: block;
   color: var(--accent);
@@ -1004,19 +1047,39 @@ code, pre {
   right: 18px; bottom: 18px;
   width: 42px; height: 42px;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  /* A floating control over the page background, so `--border` (a surface
+     divider) left its only boundary at 1.55:1 dark / 1.44:1 light. The
+     component-boundary token clears SC 1.4.11 at 3.92:1 / 4.24:1. */
+  border: 1px solid var(--control-border);
   background: var(--bg-card);
   color: var(--accent);
   font-size: 1.2rem;
   cursor: pointer;
   z-index: 240;
+  /* `opacity: 0` alone hides this button from SIGHT and from nothing else.
+     `pointer-events: none` stops the mouse; the button still reports
+     `tabIndex: 0` and still takes focus, so before the reader has scrolled a
+     keyboard user tabs onto a control that paints no pixels and gets a focus
+     ring around empty space (WCAG 2.4.7, 4.1.2). `visibility: hidden` is what
+     actually removes an element from the tab order, and it still animates: the
+     property is discrete, so the delay holds it visible for the length of the
+     fade OUT while the `.visible` rule drops the delay on the way IN. */
   opacity: 0;
+  visibility: hidden;
   transform: translateY(8px);
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s,
+    visibility 0s linear 0.2s;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
-#back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+#back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s,
+    visibility 0s linear 0s;
+}
 #back-to-top:hover { background: var(--bg-card-alt); border-color: var(--accent); }
 
 /* ── TOC scroll-spy active state ──────────────────── */
@@ -1107,7 +1170,12 @@ code, pre {
 .stage-item.active { color: var(--text); }
 .stage-item.active .dot { border-color: var(--accent); border-top-color: transparent; animation: spin 0.6s linear infinite; }
 .stage-item.done { color: var(--success); }
-.stage-item.done .dot { border-color: var(--success); background: var(--success); color: #fff; animation: none; }
+/* The tick sits ON the success fill, so it takes the palette's "ink on a
+   semantic fill" token rather than a hard-coded white: `#fff` on the dark
+   theme's `--success` (#3fb950) measured 2.54:1, well under the 4.5:1 a
+   9.6px glyph needs. `--on-fill` is #0d1117 in dark (7.45:1 on that green)
+   and #ffffff in light, where `--success` is the darker #1a7f37 (5.02:1). */
+.stage-item.done .dot { border-color: var(--success); background: var(--success); color: var(--on-fill); animation: none; }
 
 .cl-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(1rem,4vw,3rem);flex-wrap:wrap;margin:clamp(1rem,3vw,2rem) 0 1.5rem;}
 .cl-hero-main{flex:1 1 22rem;min-width:min(100%,20rem);}

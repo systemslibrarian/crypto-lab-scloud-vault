@@ -52,7 +52,14 @@ function buildLWEDisplay(demo: ToyLWEDemo): string {
     <div class="matrix-grid" style="grid-template-columns: repeat(${n}, 1fr)">`;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      html += `<div class="matrix-cell" aria-label="A[${i}][${j}]=${A[i][j]}">${A[i][j]}</div>`;
+      // No `aria-label` here. `aria-label` on an element with NO role is
+      // prohibited by ARIA and is silently discarded by every browser, so the
+      // label these cells carried was never announced to anybody — and axe
+      // files that under `incomplete`, never `violations`, which is why a
+      // violations-only gate reported this page clean while all 96 cells
+      // carried one. The cell's value is its own visible text, and the grid is
+      // already named by the `role="region"` wrapper's `aria-labelledby`.
+      html += `<div class="matrix-cell">${A[i][j]}</div>`;
     }
   }
   html += `</div></div></div>`;
