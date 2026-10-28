@@ -18,7 +18,22 @@ export function initNav(): void {
   const toTop = document.createElement('button');
   toTop.id = 'back-to-top';
   toTop.setAttribute('aria-label', 'Back to top');
-  toTop.innerHTML = '↑';
+  // Render the decorative arrow as an image rather than visible text. That
+  // keeps the button's concise accessible name from contradicting a text glyph.
+  const iconNs = 'http://www.w3.org/2000/svg';
+  const toTopIcon = document.createElementNS(iconNs, 'svg');
+  toTopIcon.setAttribute('viewBox', '0 0 24 24');
+  toTopIcon.setAttribute('width', '20');
+  toTopIcon.setAttribute('height', '20');
+  toTopIcon.setAttribute('fill', 'none');
+  toTopIcon.setAttribute('stroke', 'currentColor');
+  toTopIcon.setAttribute('stroke-width', '2');
+  toTopIcon.setAttribute('aria-hidden', 'true');
+  toTopIcon.setAttribute('focusable', 'false');
+  const toTopPath = document.createElementNS(iconNs, 'path');
+  toTopPath.setAttribute('d', 'M12 19V5M5 12l7-7 7 7');
+  toTopIcon.appendChild(toTopPath);
+  toTop.appendChild(toTopIcon);
   toTop.addEventListener('click', () =>
     window.scrollTo({ top: 0, behavior: 'smooth' }));
   document.body.appendChild(toTop);
