@@ -1,6 +1,7 @@
 /**
  * Pure TypeScript Keccak-f[1600] permutation and SHA-3 / SHAKE sponge.
- * Needed for SHAKE-128 and SHAKE-256 (matrix A generation in S-Cloud+).
+ * Needed for SHAKE-128 and SHAKE-256 (this demo's matrix A generation — see
+ * matrix.ts — and the paper's F/K/H/G sub-functions).
  *
  * Reference: NIST FIPS 202.
  * Uses BigInt for 64-bit lane operations (no external deps).

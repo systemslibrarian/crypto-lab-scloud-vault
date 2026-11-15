@@ -11,8 +11,11 @@ import { mountStages } from '../stages';
 export function renderExhibit4(container: HTMLElement): void {
   container.innerHTML = `
     <p>Run full S-Cloud+ key generation with real parameter sets.
-       The matrix A is generated from a 32-byte seed via SHAKE-128,
-       the ternary secret has Hamming weight n/2, and public key
+       The matrix A is expanded here from a 32-byte seed via SHAKE-128 — a demo
+       stand-in: Scloud+ expands a 128-bit <code>seed_A</code> with AES-128 in CTR
+       mode (ePrint 2024/1306, "Matrix Generation and Multiplication"), and uses
+       SHAKE-256 for F and K, SHA3-256 for H and SHA3-512 for G. The
+       ternary secret has Hamming weight n/2, and public key
        <code>pk = (seed_A, b = A·s + e mod q)</code>.</p>
     <div class="btn-group">
       <select id="keygen-param-select" class="param-select" aria-label="Parameter set for key generation">

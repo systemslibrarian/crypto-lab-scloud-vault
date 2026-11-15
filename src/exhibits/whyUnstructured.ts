@@ -34,9 +34,10 @@ export function renderWhyUnstructured(container: HTMLElement): void {
               lattices (Biasse–Song 2016; Cramer–Ducas–Peikert–Regev 2016;
               Cramer–Ducas–Wesolowski 2017, 2021; Ducas–Plançon–Wesolowski 2019). The gap is real and
               published.</li>
-          <li><strong>Even Kyber's own team flagged this.</strong> "Is module-lattice reduction better
-              than unstructured reduction?" is literally open question <em>Q8</em> in the Kyber NIST
-              submission — and it was still being quantified in 2025 (Ducas–Engelberts–de Perthuis,
+          <li><strong>Even Kyber's own team flagged this.</strong> Whether lattice reduction can
+              exploit module structure in practice is open question <em>Q8</em>, headed
+              "Module-BKZ in practice", in the research-directions list (Section 5.3) of the Kyber
+              round-3 specification — and it was still being quantified in 2025 (Ducas–Engelberts–de Perthuis,
               "Predicting Module-Lattice Reduction"), which finds the field's discriminant measurably
               shifts the effective attack cost. A 2026 analysis (Ogilvie, "Concrete Hardness Gap
               Between MLWE and LWE") goes further: at <em>realistic</em> parameters the common

@@ -2,7 +2,10 @@
  * Barnes-Wall BW₃₂ Lattice Coding for S-Cloud+.
  * ePrint 2024/1306 — Section 4 (Encoding/Decoding).
  *
- * BW₃₂ is a 32-dimensional lattice that encodes 5 bits per 32 dimensions.
+ * BW₃₂ is a 32-dimensional lattice; this demo's coder puts 5 bits on each
+ * 32-dimensional point. The 5 bits are THIS DEMO's, not Scloud+'s: Table 3 of
+ * the paper sets µ = 64 message bits per BW₃₂ point (96 for Scloud+-192), from
+ * µ = τ·32 − 8(k−1) with τ = 3, 4, 3 for message lengths 128, 192, 256.
  * It provides error correction that enables smaller parameters vs FrodoKEM.
  *
  * Construction: the Barnes-Wall lattice BW₃₂ is built by Construction D over the

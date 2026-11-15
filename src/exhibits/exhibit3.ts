@@ -11,7 +11,11 @@ export function renderExhibit3(container: HTMLElement): void {
 
   container.innerHTML = `
     <p><strong>Barnes-Wall BW₃₂</strong> is a 32-dimensional lattice used for error correction
-       in S-Cloud+. It encodes <strong>5 bits</strong> per 32 dimensions, enabling the KEM to
+       in S-Cloud+. Scloud+ itself carries <strong>64 message bits</strong> on each BW₃₂ point
+       — 96 bits at Scloud+-192 (ePrint 2024/1306, Table 3) — so a 128-bit message rides on
+       two points. The <strong>5 bits</strong> per point below are <em>this demo's own
+       coder</em>, a stand-in small enough to draw and decode in one picture; they are not the
+       scheme's rate. The mechanism is the same either way: error correction lets the KEM
        tolerate more noise and thus use smaller parameters than FrodoKEM.</p>
     <p>This is the key differentiator: where FrodoKEM uses no error correction (limiting noise
        tolerance), S-Cloud+ uses BW₃₂ to significantly expand the allowable error margin.</p>
@@ -25,7 +29,7 @@ export function renderExhibit3(container: HTMLElement): void {
       exactly the job BW₃₂ does for Scloud+.
     </div>
 
-    <h3>Encoding: 5-bit Message → 32-dimensional Coset Representative</h3>
+    <h3>Encoding: 5-bit Demo Message → 32-dimensional Coset Representative</h3>
     <div class="btn-group">
       <label class="inline-label">
         Message (0–31):

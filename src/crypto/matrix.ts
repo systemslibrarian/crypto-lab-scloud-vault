@@ -4,6 +4,10 @@
  *
  * A is an n×n matrix over Z_q, generated deterministically
  * from a 32-byte seed using SHAKE-128 expansion.
+ *
+ * The XOF is a DEMO STAND-IN. The paper's implementation generates A by
+ * expanding a 128-bit seed_A with AES-128 in CTR mode ("Matrix Generation and
+ * Multiplication"); SHAKE is used there for the other sub-functions, not for A.
  */
 
 import { shake128 } from './keccak';

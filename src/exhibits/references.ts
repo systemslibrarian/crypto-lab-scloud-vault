@@ -68,8 +68,8 @@ const SCRUTINY_CAUGHT: Ref[] = [
 
 // Scrutiny cuts both ways — it also catches flawed ATTACK claims, fast.
 const SCRUTINY_BOTH_WAYS: Ref[] = [
-  { authors: 'Chen', year: '2024', title: 'Quantum Algorithms for Lattice Problems (claimed a polynomial-time quantum LWE algorithm)', venue: 'IACR ePrint 2024/555', url: 'https://eprint.iacr.org/2024/555' },
-  { authors: 'Shmueli', year: '2024', title: 'A Note on Quantum Algorithms for Lattice Problems (identified the fatal flaw within days)', venue: 'IACR ePrint 2024/583', url: 'https://eprint.iacr.org/2024/583' },
+  { authors: 'Chen', year: '2024', title: 'Quantum Algorithms for Lattice Problems (claimed a polynomial-time quantum LWE algorithm; the author’s own note of 18 April 2024 retracts the claim and thanks Hongxun Wu and, independently, Thomas Vidick for finding the bug in Step 9 — eight days after posting)', venue: 'IACR ePrint 2024/555', url: 'https://eprint.iacr.org/2024/555' },
+  { authors: 'Shmueli', year: '2024', title: 'A Note on Quantum Algorithms for Lattice Problems (an early note on the same paper; the author withdrew it on 19 April 2024, so it is not the record of the flaw)', venue: 'IACR ePrint 2024/583 (withdrawn)', url: 'https://eprint.iacr.org/2024/583' },
 ];
 
 // Ternary / sparse-secret specific attacks — the trade-off Scloud+'s fixed
@@ -81,7 +81,7 @@ const TERNARY_ATTACKS: Ref[] = [
   { authors: 'Bhattacharya, Garcia-Morchon, Player, Tolhuizen', year: '2019', title: 'Achieving Secure and Efficient Lattice-based PKE: the Impact of the Secret-Key Distribution (Gaussian vs binomial vs ternary vs fixed-weight ternary)', venue: 'IACR ePrint 2019/389', url: 'https://eprint.iacr.org/2019/389' },
   { authors: 'Hhan, Hong, Kim, Lee, Lee', year: '2026', title: 'From Perfect to Approximate Hints: Efficient LWE Secret Recovery Leveraging Low Hamming Weight', venue: 'IACR ePrint 2026/1081', url: 'https://eprint.iacr.org/2026/1081' },
   { authors: 'Kalam, Sarkar, Meier', year: '2024', title: 'A Combinatorial Attack on Ternary Sparse Learning with Errors (sLWE)', venue: 'IACR ePrint 2024/2007', url: 'https://eprint.iacr.org/2024/2007' },
-  { authors: 'Lee, Lee, Son, Wang', year: '2024', title: 'Improved Meet-LWE Attack via Ternary Trees', venue: 'PKC 2024 · ePrint 2024/824', url: 'https://eprint.iacr.org/2024/824' },
+  { authors: 'Lee, Lee, Son, Wang', year: '2024', title: 'Improved Meet-LWE Attack via Ternary Trees', venue: 'IACR ePrint 2024/824 (preprint)', url: 'https://eprint.iacr.org/2024/824' },
 ];
 
 // Authoritative guidance favoring conservative / unstructured assumptions.

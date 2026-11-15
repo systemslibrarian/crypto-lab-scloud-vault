@@ -51,3 +51,25 @@ test('key generation identifies the live KEM as full matrix LWE', async ({ page 
   await expect(output).toContainText('matrix LWE—not a single-vector construction');
   await expect(output).not.toContainText('single-vector simplification');
 });
+
+test('the BW₃₂ explainer gives the paper its own code rate and labels the demo coder', async ({
+  page,
+}) => {
+  await page.goto('.');
+  await page.locator('#expand-all').click();
+
+  // ePrint 2024/1306, Table 3: µ = 64 message bits per BW₃₂ point, 96 at
+  // Scloud+-192. The 5 bits this exhibit draws are the demo's own coder, so the
+  // page must not hand the demo's rate to Scloud+.
+  const bw32 = page.locator('#exhibit-5');
+  await expect(bw32).toContainText('64 message bits');
+  await expect(bw32).toContainText('96 bits at Scloud+-192');
+  await expect(bw32).toContainText("this demo's own");
+  await expect(bw32).not.toContainText('It encodes 5 bits per 32 dimensions');
+
+  // Key generation: the SHAKE-128 expansion of a 32-byte seed is this demo's,
+  // not the paper's AES-128-CTR expansion of a 128-bit seed_A.
+  const keygen = page.locator('#exhibit-6');
+  await expect(keygen).toContainText('AES-128 in CTR');
+  await expect(keygen).toContainText('demo');
+});

@@ -322,7 +322,9 @@
       <p>Standard LWE-KEM treatments stop at "add noise, hope it rounds away." S-Cloud+
          takes a different path: Barnes-Wall BW₃₂ lattice coding provides structured error
          correction, so instead of each message bit having to survive on its own, a whole
-         5-bit chunk is carried by a 32-dimensional lattice point and the decoder corrects
+         block of message bits is carried by a 32-dimensional lattice point &mdash; 64 bits per
+         point in Scloud+ itself, 96 at Scloud+-192 (ePrint 2024/1306, Table 3), and 5 per point
+         in this demo's own simplified coder &mdash; and the decoder corrects
          anything inside the packing radius of BW₃₂. That extra margin is what lets the
          authors shrink the modulus and the matrix dimensions while holding the security
          level, and it is where the size win comes from.</p>
@@ -332,7 +334,10 @@
          security and without relying on algebraic ring structure like ML-KEM. An earlier
          version of this page said BW₃₂ "doubles the tolerable noise" compared with simple
          rounding; that factor is not stated anywhere in the paper and has been dropped
-         rather than left standing as an unsourced number.</p>
+         rather than left standing as an unsourced number. The same version presented this
+         demo's 5-bits-per-point coder as Scloud+'s own rate; the paper's Table 3 sets
+         &mu; = 64 bits per BW₃₂ point (96 at Scloud+-192), and the 5 is now labelled as the
+         demo's.</p>
     </section>
   </main>
 

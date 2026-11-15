@@ -9,10 +9,12 @@ import {
 /**
  * BW32 encode/decode + error-correction-radius tests.
  *
- * The BW32 coder is the reason the KEM tolerates LWE noise: each 5-bit block is
+ * The BW32 coder is the reason the KEM tolerates LWE noise: each message block is
  * spread across a 32-dimensional codeword whose nearest-codeword (FWHT) decoder
  * recovers it as long as the accumulated noise stays inside the correction
- * radius. These tests pin (1) noiseless round-trip for every 5-bit symbol,
+ * radius. The 5-bit block below is this demo's coder — Scloud+ itself puts
+ * µ = 64 bits on a BW₃₂ point, 96 at Scloud+-192 (ePrint 2024/1306, Table 3).
+ * These tests pin (1) noiseless round-trip for every 5-bit symbol,
  * (2) the actual correction radius against a uniform per-coordinate bias, and
  * (3) the "signed peak, not absolute peak" property the decoder comment claims
  * — which a naive Math.abs() decoder would get wrong.
