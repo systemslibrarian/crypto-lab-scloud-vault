@@ -34,6 +34,7 @@ export function renderExhibit5(container: HTMLElement): void {
   const runBtn = container.querySelector('#encaps-run') as HTMLButtonElement;
   const tamperBtn = container.querySelector('#encaps-tamper') as HTMLButtonElement;
   const output = container.querySelector('#encaps-output') as HTMLElement;
+  select.addEventListener('change', () => output.replaceChildren());
 
   async function run(tamper: boolean): Promise<void> {
     const level = parseInt(select.value) as 128 | 192 | 256;
@@ -102,13 +103,32 @@ function foBranch(taken: 'accept' | 'reject'): string {
     <div class="fo-branch-card accept ${taken === 'accept' ? '' : 'dim'}">
       <h4>✓ Re-encryption matches → ACCEPT</h4>
       <div class="mono">ss = K(k′ ‖ C)</div>
-      <div class="note">Ciphertext is authentic — return the real shared secret.</div>
+      <div class="note">The ciphertext passed the re-encryption check. Anyone with the public key can encapsulate.</div>
     </div>
     <div class="fo-branch-card reject ${taken === 'reject' ? '' : 'dim'}">
       <h4>✗ Mismatch → IMPLICIT REJECT</h4>
       <div class="mono">ss = K(z ‖ C)</div>
       <div class="note">Invalid/tampered — return a pseudo-random key from secret seed z. No error leaked.</div>
     </div>
+  </div>`;
+}
+
+/** Display the receiver's branch separately from the comparison of the two returned keys. */
+export function renderTamperOutcome(originalKey: Uint8Array, returnedKey: Uint8Array, reEncMatch: boolean): string {
+  const original = bytesToHex(originalKey);
+  const returned = bytesToHex(returnedKey);
+  const equal = original === returned;
+  return `<div class="fo-check">
+    <div class="fo-box"><span class="lab">Original shared secret</span>${original}</div>
+    <div class="fo-eq ${equal ? 'match' : 'nomatch'}">${equal ? '=' : '≠'}</div>
+    <div class="fo-box"><span class="lab">From modified ciphertext</span>${returned}</div>
+  </div>
+  <div class="callout ${!reEncMatch && !equal ? 'good' : 'warn'}">
+    <span class="callout-title">${reEncMatch ? 'Re-encryption matched (unexpected)' : 'Re-encryption differed: implicit rejection'}</span>
+    ${reEncMatch
+      ? 'The receiver took the accept branch and derived the key from the recovered message.'
+      : 'The receiver derived the fallback key from the secret rejection seed and received ciphertext. The KEM returns key bytes in either case.'}
+    ${equal ? 'The returned keys match.' : 'The returned keys differ.'}
   </div>`;
 }
 
@@ -138,22 +158,9 @@ function renderResult(r: KEMRoundtripResult, params: SCloudParams, ms: number, s
   html += foBranch(r.decaps.reEncMatch ? 'accept' : 'reject');
 
   if (showTamper && r.ssTampered && r.tamperDecaps) {
-    const ssTampHex = bytesToHex(r.ssTampered);
-    html += `<div class="result-box fade-in" style="margin-top:0.75rem; border-color:var(--danger)">`;
-    html += `<div class="result-row" style="color:var(--danger);font-weight:700">⚠ TAMPER DETECTION</div>`;
-    html += `<div class="fo-check">
-      <div class="fo-box"><span class="lab">Original shared secret</span>${ssEncHex.substring(0, 48)}…</div>
-      <div class="fo-eq nomatch">≠</div>
-      <div class="fo-box"><span class="lab">From tampered ciphertext</span>${ssTampHex.substring(0, 48)}…</div>
-    </div>`;
-    html += `<div class="result-row"><span class="result-label">Re-encryption matched?</span>
-      <span class="${r.tamperDecaps.reEncMatch ? 'danger' : 'success'}">${r.tamperDecaps.reEncMatch ? 'yes (unexpected)' : 'NO → implicit rejection'}</span></div>`;
-    html += `</div>`;
+    html += `<div class="result-box fade-in" style="margin-top:0.75rem"><h4>Modified ciphertext</h4>
+      ${renderTamperOutcome(r.ssEncaps, r.ssTampered, r.tamperDecaps.reEncMatch)}</div>`;
     html += foBranch(r.tamperDecaps.reEncMatch ? 'accept' : 'reject');
-    html += `<div class="callout good"><span class="callout-title">Correct IND-CCA2 behavior</span>
-      The tampered ciphertext failed the re-encryption check, so decapsulation returned
-      <code>K(z ‖ C)</code> — a pseudo-random key from the secret rejection seed <code>z</code>.
-      The attacker gets a useless key and <em>no error signal</em> to learn from.</div>`;
   } else if (!showTamper) {
     html += `<div class="callout"><span class="callout-title">Try it</span>
       Hit <strong>🔓 Tamper + Detect</strong> to flip a few ciphertext bytes and watch the FO

@@ -29,6 +29,7 @@ export function renderExhibit4(container: HTMLElement): void {
   const select = container.querySelector('#keygen-param-select') as HTMLSelectElement;
   const runBtn = container.querySelector('#keygen-run') as HTMLButtonElement;
   const output = container.querySelector('#keygen-output') as HTMLElement;
+  select.addEventListener('change', () => output.replaceChildren());
 
   runBtn.addEventListener('click', async () => {
     const level = parseInt(select.value) as 128 | 192 | 256;

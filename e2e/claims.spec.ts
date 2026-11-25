@@ -73,3 +73,16 @@ test('the BW₃₂ explainer gives the paper its own code rate and labels the de
   await expect(keygen).toContainText('AES-128 in CTR');
   await expect(keygen).toContainText('demo');
 });
+
+test('changing KEM parameters clears results from the previous set', async ({ page }) => {
+  await page.goto('.');
+  for (const id of ['keygen', 'encaps']) {
+    const output = page.locator(`#${id}-output`);
+    await page.locator(`#${id}-run`).click();
+    await expect(output).toContainText('Scloud+-128', { timeout: 90_000 });
+    await page.locator(`#${id}-param-select`).selectOption('192');
+    await expect(output).toBeEmpty();
+    await page.locator(`#${id}-run`).click();
+    await expect(output).toContainText('Scloud+-192', { timeout: 90_000 });
+  }
+});

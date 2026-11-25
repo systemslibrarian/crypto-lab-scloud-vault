@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { renderTamperOutcome } from '../src/exhibits/exhibit5';
 import {
   keyGen,
   encaps,
@@ -168,4 +169,17 @@ describe('fullRoundtrip demo helper', () => {
     expect(r.pkSize).toBeGreaterThan(0);
     expect(r.ctSize).toBeGreaterThan(0);
   });
+});
+
+describe('observed decapsulation results in the lesson', () => {
+  for (const accepted of [false, true]) {
+    for (const equal of [false, true]) {
+      it(`reports accepted=${accepted} independently of equal keys=${equal}`, () => {
+        const html = renderTamperOutcome(Uint8Array.of(7), Uint8Array.of(equal ? 7 : 9), accepted);
+        expect(html).toContain(accepted ? 'took the accept branch' : 'derived the fallback key');
+        expect(html).toContain(equal ? 'returned keys match.' : 'returned keys differ.');
+        expect(html).toContain(equal ? 'class="fo-eq match">=' : 'class="fo-eq nomatch">≠');
+      });
+    }
+  }
 });

@@ -4,6 +4,7 @@
  * (n = 16). Every step shows the real computed data plus a "what" and a "why".
  */
 
+import { renderTamperOutcome } from './exhibit5';
 import { SCloudParams } from '../crypto/params';
 import {
   keyGen, encapsDetailed, decapsDetailed, serializeCiphertext,
@@ -193,7 +194,7 @@ function stepDecaps(run: Run): string {
       <div class="formula">
         D = C2 − C1·S&nbsp;&nbsp;→&nbsp;&nbsp;m′ = <span class="hl">Decode(D)</span><br>
         re-encrypt with m′ and check it matches the ciphertext (next step)<br>
-        shared secret = K(k′ ‖ ciphertext)
+        shared secret = K(${dec.reEncMatch ? 'k′' : 'z'} ‖ ciphertext)
       </div>
       <p>Using the secret <strong>S</strong>, the receiver cancels the big shared LWE term, leaving
          the noisy encoded message. BW₃₂ decoding error-corrects it back to <strong>m′</strong>.</p>
@@ -203,17 +204,15 @@ function stepDecaps(run: Run): string {
         <div class="fo-eq ${match ? 'match' : 'nomatch'}">${match ? '=' : '≠'}</div>
         <div class="fo-box"><span class="lab">Shared secret — receiver</span>${bytesToHex(dec.ss)}</div>
       </div>
-      <div class="callout good">
-        <span class="callout-title">${match ? '✓ Success' : '✗ Unexpected'}</span>
-        Both sides now hold the ${match ? 'same' : 'DIFFERENT'} secret <strong>K</strong> — agreed
-        without ever sending it. They can use it to encrypt their conversation.
+      <div class="callout ${match ? 'good' : 'warn'}">
+        <span class="callout-title">${match ? '✓ Shared secret agreed' : '✗ Shared secrets differ'}</span>
+        ${match ? 'Both sides derived the same key without sending it.' : 'The two returned keys differ. The sender and receiver have not established a shared key in this run.'}
       </div>
     </div>`;
 }
 
 function stepTamper(run: Run): string {
   const { enc, tamperDec } = run;
-  const tamperedDiffers = bytesToHex(enc.ss) !== bytesToHex(tamperDec.ss);
   return `
     <div class="guide-step">
       <span class="guide-phase-label">The security guarantee</span>
@@ -227,18 +226,7 @@ function stepTamper(run: Run): string {
         if C′ <span class="hl">!=</span> C → return K(<span class="hl">z</span> ‖ C)&nbsp;&nbsp;<span style="color:var(--text-muted)">(implicit reject — a junk key from a secret seed z)</span>
       </div>
       <p>We flipped one byte of the ciphertext, then decapsulated it:</p>
-      <div class="fo-check">
-        <div class="fo-box"><span class="lab">Honest shared secret</span>${bytesToHex(enc.ss)}</div>
-        <div class="fo-eq nomatch">≠</div>
-        <div class="fo-box"><span class="lab">From tampered ciphertext</span>${bytesToHex(tamperDec.ss)}</div>
-      </div>
-      <div class="callout ${tamperedDiffers ? 'good' : 'warn'}">
-        <span class="callout-title">Re-encryption matched: ${tamperDec.reEncMatch ? 'yes' : 'NO → rejected'}</span>
-        The tampered ciphertext yields a <strong>completely different, useless</strong> key — and
-        crucially, <em>no error message</em>. The attacker can't tell rejection from success, which
-        closes the door on chosen-ciphertext attacks. This is the whole point of turning a basic
-        PKE into a CCA-secure KEM.
-      </div>
+      ${renderTamperOutcome(enc.ss, tamperDec.ss, tamperDec.reEncMatch)}
     </div>`;
 }
 
@@ -252,7 +240,7 @@ function stepRecap(run: Run): string {
         <li><strong>KeyGen</strong> published B = A·S + E and kept S secret (LWE hardness).</li>
         <li><strong>Encaps</strong> hid a random message m in a ciphertext and derived key K.</li>
         <li><strong>Decaps</strong> used s to recover m and re-derive the same K.</li>
-        <li><strong>FO transform</strong> made tampering produce useless keys, not exploitable errors.</li>
+        <li><strong>FO transform</strong> checked the modified ciphertext and took the ${run.tamperDec.reEncMatch ? 'accept' : 'implicit rejection'} branch.</li>
       </ol>
       <div class="callout ${ok ? 'good' : 'warn'}">
         <span class="callout-title">${ok ? '✓ Shared secret agreed' : '✗ Mismatch'}</span>
